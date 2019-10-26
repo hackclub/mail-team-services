@@ -41,10 +41,12 @@ app.post('/bounce', function (req, res) {
         form.submit('https://slack.com/api/files.upload', function(err, response) {
             if (err) {
                 console.log('i submitted but i got error :(')
+                console.log(response)
                 res.send(err)
             }
             else {
                 console.log('i submitted and it is good so happy!!!!!')
+                console.log(response)
                 res.send('success')
             }
         })
