@@ -47,7 +47,7 @@ app.post('/bounce', function (req, res) {
             else {
                 console.log('i submitted and it is good so happy!!!!!')
                 console.log(response)
-                res.send('success')
+                res.send(response)
             }
         })
     }
