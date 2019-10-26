@@ -18,7 +18,7 @@ app.post('/bounce', function (req, res) {
             channel
         } = req.params
 
-        var buffer = new Buffer(fileData, 'base64')
+        var buffer = Buffer.from(fileData, 'base64')
         var form = new FormData()
 
         form.append('file', buffer)
