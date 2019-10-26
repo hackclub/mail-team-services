@@ -47,7 +47,11 @@ app.post('/bounce', function (req, res) {
             else {
                 console.log('i submitted and it is good so happy!!!!!')
                 console.log(response)
-                res.send(response)
+                res.send({
+                    statusCode: response.statusCode,
+                    statusMessage: response.statusMessage,
+                    message: response.message,
+                })
             }
         })
     }
