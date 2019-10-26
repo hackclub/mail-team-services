@@ -23,6 +23,7 @@ app.post('/bounce', function (req, res) {
         } = req.body
 
         console.log('hmmm, lots of stuff to unpack here...')
+        console.log(req.body)
 
         var buffer = Buffer.from(fileData, 'base64')
         var form = new FormData()
@@ -46,7 +47,7 @@ app.post('/bounce', function (req, res) {
             }
             else {
                 console.log('i submitted and it is good so happy!!!!!')
-                console.log(response)
+                // console.log(response)
                 res.send({
                     statusCode: response.statusCode,
                     statusMessage: response.statusMessage,
