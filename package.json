@@ -1,0 +1,16 @@
+{
+  "name": "slack-file-poster",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "form-data": "^2.5.1",
+    "node-fetch": "^2.6.0"
+  }
+}
