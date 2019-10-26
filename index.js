@@ -52,6 +52,7 @@ app.post('/bounce', function (req, res) {
                     statusCode: response.statusCode,
                     statusMessage: response.statusMessage,
                     message: response.message,
+                    file: response.file,
                 })
             }
         })
