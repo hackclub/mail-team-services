@@ -18,7 +18,7 @@ app.post('/bounce', function (req, res) {
             message,
             token,
             channel
-        } = req.params
+        } = req.body
 
         console.log('hmmm, lots of stuff to unpack here...')
 
