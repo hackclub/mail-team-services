@@ -24,7 +24,6 @@ app.post('/bounce', function (req, res) {
         } = req.body
 
         console.log('hmmm, lots of stuff to unpack here...')
-        console.log(req.body)
 
         var buffer = Buffer.from(fileData, 'base64')
         var form = new FormData()
