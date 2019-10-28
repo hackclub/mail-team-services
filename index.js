@@ -18,6 +18,7 @@ app.post('/bounce', function (req, res) {
             fileType,
             fileName,
             message,
+            thread,
             token,
             channel
         } = req.body
@@ -31,6 +32,7 @@ app.post('/bounce', function (req, res) {
         console.log('ok i made a buffer and a form')
 
         form.append('token', token)
+        form.append('thread_ts', thread)
         form.append('channels', channel)
         form.append('filename', fileName)
         form.append('filetype', fileType)
