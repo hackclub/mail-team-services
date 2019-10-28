@@ -30,12 +30,14 @@ app.post('/bounce', function (req, res) {
 
         console.log('ok i made a buffer and a form')
 
-        form.append('file', buffer)
         form.append('token', token)
         form.append('channels', channel)
         form.append('filename', fileName)
         form.append('filetype', fileType)
         form.append('initial_comment', message)
+        form.append('file', buffer, {
+            filename: fileName+'.'+fileType
+        })
 
         console.log('yay everything is appended to the form! redy to send :))')
         
