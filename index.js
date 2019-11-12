@@ -111,7 +111,7 @@ app.post('/shipping-label', async function (req, res) {
         buffer = await pdfDoc.save()
         buffer = Buffer.from(buffer)
 
-        console.log('now i saved that pdf and turned it bac to base64')
+        console.log('now i saved that pdf and turned it bac to a buffer')
 
         var form = new FormData()
 
