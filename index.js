@@ -88,6 +88,7 @@ app.post('/shipping-label', async function (req, res) {
         console.log(`hmmm, lots of stuff to unpack here for this ${scenarioName} shipment...`)
 
         var pdfData = atob(fileData)
+        console.log(`Label Data: ${fileData}`)
 
         var pdfDoc = await pdflib.PDFDocument.load(pdfData)
         var helveticaFont = await pdfDoc.embedFont(pdflib.StandardFonts.Helvetica)
