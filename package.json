@@ -9,6 +9,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "atob": "^2.1.2",
+    "btoa": "^1.2.1",
     "express": "^4.17.1",
     "form-data": "^2.5.1",
     "node-fetch": "^2.6.0",

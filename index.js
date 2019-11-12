@@ -1,6 +1,8 @@
 const FormData = require('form-data')
 const express = require('express')
 const pdflib = require('pdf-lib')
+const atob = require('atob')
+const btoa = require('btoa')
 
 const app = express()
 
