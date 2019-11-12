@@ -100,9 +100,7 @@ app.post('/shipping-label', async function (req, res) {
         var { width, height } = firstPage.getSize()
         
         var addendumText = scenarioName +
-            missionNote.length ?
-                ' | '+missionNote :
-                ''
+            (missionNote.length ? ' | '+missionNote : '')
 
         firstPage.drawText(addendumText, {
             x: width/2,
