@@ -109,6 +109,7 @@ app.post('/shipping-label', async function (req, res) {
         console.log('i drawd the text to the first page')
 
         buffer = await pdfDoc.save()
+        buffer = Buffer.from(buffer)
 
         console.log('now i saved that pdf and turned it bac to base64')
 
