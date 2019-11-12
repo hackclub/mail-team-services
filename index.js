@@ -100,9 +100,9 @@ app.post('/shipping-label', async function (req, res) {
         var { width, height } = firstPage.getSize()
         
         firstPage.drawText(scenarioName, {
-            x: 25,
-            y: height - 100,
-            size: 50,
+            x: 10,
+            y: height - 10,
+            size: 8,
             font: helveticaFont
         })
 
