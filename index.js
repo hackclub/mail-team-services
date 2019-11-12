@@ -87,9 +87,9 @@ app.post('/shipping-label', async function (req, res) {
 
         console.log(`hmmm, lots of stuff to unpack here for this ${scenarioName} shipment...`)
 
-        var pdfData = atob(fileData)
+        var buffer = Buffer.from(fileData, 'base64')
 
-        var pdfDoc = await pdflib.PDFDocument.load(pdfData)
+        var pdfDoc = await pdflib.PDFDocument.load(buffer)
         var helveticaFont = await pdfDoc.embedFont(pdflib.StandardFonts.Helvetica)
 
         console.log('i loaded the documint from the base64 data suxesfuly')
@@ -108,12 +108,10 @@ app.post('/shipping-label', async function (req, res) {
 
         console.log('i drawd the text to the first page')
 
-        pdfData = await pdfDoc.save()
-        pdfData = btoa(pdfData)
+        buffer = await pdfDoc.save()
 
         console.log('now i saved that pdf and turned it bac to base64')
 
-        var buffer = Buffer.from(pdfData, 'base64')
         var form = new FormData()
 
         console.log('ok i made a buffer and a form')
