@@ -123,7 +123,7 @@ app.post('/shipping-label', async function (req, res) {
         form.append('filetype', 'pdf')
         form.append('initial_comment', message)
         form.append('file', buffer, {
-            filename: fileName+'.'+fileType
+            filename: fileName+'.pdf'
         })
 
         console.log('yay everything is appended to the form! redy to send :))')
