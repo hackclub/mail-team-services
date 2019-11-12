@@ -68,7 +68,7 @@ app.post('/bounce', function (req, res) {
     }
 })
 
-app.post('/shipping-label', function (req, res) {
+app.post('/shipping-label', async function (req, res) {
     console.log('oh boy oh boy here comes a request to prepare a shipping label!!')
 
     try {
