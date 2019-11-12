@@ -105,9 +105,9 @@ app.post('/shipping-label', async function (req, res) {
                 ''
 
         firstPage.drawText(addendumText, {
-            x: 10,
-            y: height - 10,
-            size: 8,
+            x: width/2,
+            y: 10,
+            size: 10,
             font: helveticaFont
         })
 
