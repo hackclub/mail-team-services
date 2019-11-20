@@ -116,11 +116,13 @@ app.post('/shipping-label', async function (req, res) {
 
         console.log('i drawd the text to the first page')
 
+        const internalQRImage = await pdfDoc.embedPng(internalQR)
+        
         const secondPage = pdfDoc.addPage()
 
         const qrSize = 50
 
-        secondPage.drawImage(internalQR, {
+        secondPage.drawImage(internalQRImage, {
             x: secondPage.getWidth() / 2 - qrSize / 2,
             y: secondPage.getHeight() / 2 - qrSize / 2,
             width: qrSize,
