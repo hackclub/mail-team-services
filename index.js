@@ -121,7 +121,7 @@ app.post('/shipping-label', async function (req, res) {
         const internalQrBytes = await fetch(internalQrUrl).then((res) => res.arrayBuffer())
         const internalQrImage = await pdfDoc.embedPng(internalQrBytes)
 
-        const secondPage = pdfDoc.addPage()
+        const secondPage = pdfDoc.addPage([width, height])
 
         const qrSize = 50
 
