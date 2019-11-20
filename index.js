@@ -2,6 +2,7 @@ const fileToArrayBuffer = require('file-to-array-buffer')
 const FormData = require('form-data')
 const express = require('express')
 const pdflib = require('pdf-lib')
+const fetch = require('node-fetch')
 const atob = require('atob')
 const btoa = require('btoa')
 
