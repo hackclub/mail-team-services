@@ -82,7 +82,8 @@ app.post('/shipping-label', async function (req, res) {
             message,
             thread,
             token,
-            channel
+            channel,
+            internalQR,
         } = req.body
 
         console.log(`hmmm, lots of stuff to unpack here for this ${scenarioName} shipment...`)
@@ -114,6 +115,26 @@ app.post('/shipping-label', async function (req, res) {
         })
 
         console.log('i drawd the text to the first page')
+
+        const secondPage = pdfDoc.addPage()
+
+        const qrSize = 50
+
+        secondPage.drawImage(internalQR, {
+            x: page.getWidth() / 2 - qrSize / 2,
+            y: page.getHeight() / 2 - qrSize / 2,
+            width: qrSize,
+            height: qrSize,
+        })
+
+        secondPage.drawText('Scan that code with your phone\'s camera app!', {
+            x: 10,
+            y: 10,
+            size: 10,
+            font: helveticaFont
+        })
+
+        console.log('i added a second page with a qr code on it')
 
         buffer = await pdfDoc.save()
         buffer = Buffer.from(buffer)
