@@ -84,7 +84,7 @@ app.post('/shipping-label', async function (req, res) {
             thread,
             token,
             channel,
-            internalQR,
+            internalQrUrl,
         } = req.body
 
         console.log(`hmmm, lots of stuff to unpack here for this ${scenarioName} shipment...`)
@@ -116,16 +116,15 @@ app.post('/shipping-label', async function (req, res) {
         })
 
         console.log('i drawd the text to the first page')
-        console.log(internalQR)
 
-        const internalQRImageArray = await fileToArrayBuffer(internalQR)
-        const internalQRImage = await pdfDoc.embedPng(internalQRImageArray)
+        const internalQrBytes = await fetch(internalQrUrl).then((res) => res.arrayBuffer())
+        const internalQrImage = await pdfDoc.embedPng(internalQrBytes)
 
         const secondPage = pdfDoc.addPage()
 
         const qrSize = 50
 
-        secondPage.drawImage(internalQRImage, {
+        secondPage.drawImage(internalQrImage, {
             x: secondPage.getWidth() / 2 - qrSize / 2,
             y: secondPage.getHeight() / 2 - qrSize / 2,
             width: qrSize,
