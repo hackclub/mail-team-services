@@ -1,3 +1,4 @@
+const fileToArrayBuffer = require('file-to-array-buffer')
 const FormData = require('form-data')
 const express = require('express')
 const pdflib = require('pdf-lib')
@@ -116,8 +117,9 @@ app.post('/shipping-label', async function (req, res) {
 
         console.log('i drawd the text to the first page')
 
-        const internalQRImage = await pdfDoc.embedPng(internalQR)
-        
+        const internalQRImageArray = await fileToArrayBuffer(internalQR)
+        const internalQRImage = await pdfDoc.embedPng(internalQRImageArray)
+
         const secondPage = pdfDoc.addPage()
 
         const qrSize = 50
