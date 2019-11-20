@@ -116,6 +116,7 @@ app.post('/shipping-label', async function (req, res) {
         })
 
         console.log('i drawd the text to the first page')
+        console.log(internalQR)
 
         const internalQRImageArray = await fileToArrayBuffer(internalQR)
         const internalQRImage = await pdfDoc.embedPng(internalQRImageArray)
