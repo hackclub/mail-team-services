@@ -39,7 +39,7 @@ module.exports = async function(pdf, pageIndex) {
   var rawData = new Uint8Array(pdf);
 
   // Load the PDF file.
-  var loadingTask = pdfjsLib.getDocument({data: rawData, disableFontFace: true});
+  var loadingTask = pdfjsLib.getDocument({data: rawData, disableFontFace: false});
   var pdfDocument = await loadingTask.promise
   
   // Get the first page.
