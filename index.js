@@ -7,6 +7,7 @@ const pdflib = require('pdf-lib')
 const fetch = require('node-fetch')
 const atob = require('atob')
 const btoa = require('btoa')
+const request
 
 const app = express()
 
@@ -97,10 +98,10 @@ async function reformatToA4(labels) {
     })
 
     page.drawImage(externalLabelEmbedded, {
-        x: page.getWidth() / 2,
-        y: page.getHeight() / 2 + 200,
-        width: 160,
-        height: 240,
+        x: page.getWidth() / 2 + ppi*3,
+        y: page.getHeight() / 2 + ppi*0.5,
+        width: ppi*4,
+        height: ppi*6,
         rotate: pdflib.degrees(90)
     })
 
@@ -124,6 +125,8 @@ app.post('/shipping-label', async function (req, res) {
             token,
             channel,
             internalQrUrl,
+            externalQrUrl,
+            missionRecordId,
             format
         } = req.body
 
@@ -208,13 +211,20 @@ app.post('/shipping-label', async function (req, res) {
         
         form.submit('https://slack.com/api/files.upload', function(err, response) {
             if (err) {
-                console.log('i submitted but i got error :(')
+                console.log('i submitted pdf 2 slack but i got error :(')
                 console.log(err)
                 res.send(err)
             }
             else {
-                console.log('i submitted and it is good so happy!!!!!')
+                console.log('i submitted pdf 2 slack and it is good so happy!!!!!')
                 // console.log(response)
+
+                const zapResponse = await fetch('https://hooks.zapier.com/hooks/catch/507705/o47eshq/', {
+                    method: 'POST',
+                    pdfUrl: response.permalink_public,
+                    missionRecordId
+                })
+
                 res.send({
                     statusCode: response.statusCode,
                     statusMessage: response.statusMessage,
