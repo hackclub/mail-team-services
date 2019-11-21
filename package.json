@@ -9,12 +9,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "assert": "^2.0.0",
     "atob": "^2.1.2",
     "btoa": "^1.2.1",
+    "canvas": "^2.6.0",
     "express": "^4.17.1",
     "file-to-array-buffer": "^1.0.0",
     "form-data": "^2.5.1",
     "node-fetch": "^2.6.0",
-    "pdf-lib": "^1.2.1"
+    "pdf-lib": "^1.2.1",
+    "pdfjs-dist": "^2.2.228"
   }
 }

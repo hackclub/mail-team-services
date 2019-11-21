@@ -1,3 +1,5 @@
+const render = require('./render')
+
 const fileToArrayBuffer = require('file-to-array-buffer')
 const FormData = require('form-data')
 const express = require('express')
@@ -72,6 +74,42 @@ app.post('/bounce', function (req, res) {
     }
 })
 
+async function reformatToA4(labels) {
+    console.log('ok maam i will reformat these labels to fit the A4 sticky label sheets :)')
+
+    const externalLabelImage = await render(labels, 1)
+    const internalLabelImage = await render(labels, 2)
+
+    console.log('i rendered the pages to images hoo-rah!!')
+
+    const pdf = await PDFDocument.create()
+    const page = pdf.addPage()
+
+    const externalLabelEmbedded = await pdf.embedPng(externalLabelImage)
+    const internalLabelEmbedded = await pdf.embedPng(internalLabelImage)
+
+    page.drawImage(externalLabelEmbedded, {
+        x: 200,
+        y: page.getHeight() / 2 - 300,
+        width: 400,
+        height: 600,
+        rotate: pdflib.degrees(90)
+    })
+
+    page.drawImage(externalLabelEmbedded, {
+        x: 200,
+        y: page.getHeight() / 2 + 100,
+        width: 400,
+        height: 600,
+        rotate: pdflib.degrees(90)
+    })
+
+    console.log('now i drawd those imuges on a new pdf')
+
+    var newPdf = await pdf.save()
+    return newPdf
+}
+
 app.post('/shipping-label', async function (req, res) {
     console.log('oh boy oh boy here comes a request to prepare a shipping label!!')
 
@@ -86,6 +124,7 @@ app.post('/shipping-label', async function (req, res) {
             token,
             channel,
             internalQrUrl,
+            format
         } = req.body
 
         console.log(`hmmm, lots of stuff to unpack here for this ${scenarioName} shipment...`)
@@ -141,8 +180,13 @@ app.post('/shipping-label', async function (req, res) {
 
         console.log('i added a second page with a qr code on it')
 
-        buffer = await pdfDoc.save()
-        buffer = Buffer.from(buffer)
+        var newPdf = await pdfDoc.save()
+
+        if (format == 'A4') {
+            newPdf = await reformatToA4(newPdf)
+        }
+
+        buffer = Buffer.from(newPdf)
 
         console.log('now i saved that pdf and turned it bac to a buffer')
 
