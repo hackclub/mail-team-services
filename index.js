@@ -209,38 +209,41 @@ app.post('/shipping-label', async function (req, res) {
         })
 
         console.log('yay everything is appended to the form! redy to send :))')
+
+        const slackResponse = await fetch('https://slack.com/api/files.upload', {
+            method: 'POST',
+            body: form
+        })
+
+        if (!slackResponse.isOk) {
+            console.log('i submitted pdf 2 slack but i got error :(')
+            console.log(slackResponse)
+            res.send(slackResponse)
+            break;
+        }
+
+        console.log('i submitted pdf 2 slack and it is good so happy!!!!!')
+        console.log(slackResponse)
+
+        const zapResponse = await fetch('https://hooks.zapier.com/hooks/catch/507705/o47eshq/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                pdfUrl: response.permalink_public,
+                missionRecordId
+            })
+        })
         
-        form.submit('https://slack.com/api/files.upload', function(err, response) {
-            if (err) {
-                console.log('i submitted pdf 2 slack but i got error :(')
-                console.log(err)
-                res.send(err)
-            }
-            else {
-                console.log('i submitted pdf 2 slack and it is good so happy!!!!!')
-                console.log(response)
+        console.log('now i submitted the slcak pdf url to zaper!!! here is the zapier response:')
+        // console.log(zapResponse)
 
-                fetch('https://hooks.zapier.com/hooks/catch/507705/o47eshq/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        pdfUrl: response.permalink_public,
-                        missionRecordId
-                    })
-                }).then(zapResponse => {
-                    console.log('now i submitted the slcak pdf url to zaper!!! here is the zapier response:')
-                    // console.log(zapResponse)
-
-                    res.send({
-                        statusCode: response.statusCode,
-                        statusMessage: response.statusMessage,
-                        message: response.message,
-                        file: response.file,
-                    })
-                })
-            }
+        res.send({
+            statusCode: zapResponse.statusCode,
+            statusMessage: zapResponse.statusMessage,
+            message: zapResponse.message,
+            file: zapResponse.file,
         })
     }
     catch (err) {
