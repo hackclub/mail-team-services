@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "airtable": "^0.7.2",
     "assert": "^2.0.0",
     "atob": "^2.1.2",
     "btoa": "^1.2.1",
