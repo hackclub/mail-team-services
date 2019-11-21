@@ -220,7 +220,7 @@ app.post('/shipping-label', async function (req, res) {
                 console.log('i submitted pdf 2 slack and it is good so happy!!!!!')
                 // console.log(response)
 
-                const zapResponse = await fetch('https://hooks.zapier.com/hooks/catch/507705/o47eshq/', {
+                fetch('https://hooks.zapier.com/hooks/catch/507705/o47eshq/', {
                     method: 'POST',
                     pdfUrl: response.permalink_public,
                     missionRecordId
