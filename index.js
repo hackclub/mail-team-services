@@ -229,13 +229,13 @@ app.post('/shipping-label', async function (req, res) {
                         pdfUrl: response.permalink_public,
                         missionRecordId
                     }
-                })
-
-                res.send({
-                    statusCode: response.statusCode,
-                    statusMessage: response.statusMessage,
-                    message: response.message,
-                    file: response.file,
+                }).then(() => {
+                    res.send({
+                        statusCode: response.statusCode,
+                        statusMessage: response.statusMessage,
+                        message: response.message,
+                        file: response.file,
+                    })
                 })
             }
         })
