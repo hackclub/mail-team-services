@@ -210,10 +210,10 @@ app.post('/shipping-label', async function (req, res) {
 
         console.log('yay everything is appended to the form! redy to send :))')
 
-        const slackResponse = await fetch('https://slack.com/api/files.upload', {
+        const slackResponse = (await fetch('https://slack.com/api/files.upload', {
             method: 'POST',
             body: form
-        })
+        })).json()
 
         if (slackResponse.error) {
             console.log('i submitted pdf 2 slack but i got error :(')
