@@ -222,6 +222,9 @@ app.post('/shipping-label', async function (req, res) {
 
                 fetch('https://hooks.zapier.com/hooks/catch/507705/o47eshq/', {
                     method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                     body: {
                         pdfUrl: response.permalink_public,
                         missionRecordId
