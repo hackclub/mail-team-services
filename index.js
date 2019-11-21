@@ -83,7 +83,7 @@ async function reformatToA4(labels) {
     console.log('i rendered the pages to images hoo-rah!!')
 
     const pdf = await pdflib.PDFDocument.create()
-    const page = pdf.insertPage(1)
+    const page = pdf.addPage()
 
     const externalLabelEmbedded = await pdf.embedPng(externalLabelImage)
     const internalLabelEmbedded = await pdf.embedPng(internalLabelImage)
@@ -160,7 +160,7 @@ app.post('/shipping-label', async function (req, res) {
         const internalQrBytes = await fetch(internalQrUrl).then((res) => res.arrayBuffer())
         const internalQrImage = await pdfDoc.embedPng(internalQrBytes)
 
-        const secondPage = pdfDoc.addPage([width, height])
+        const secondPage = pdfDoc.insertPage(1, [width, height])
 
         const qrSize = 50
 
