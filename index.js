@@ -229,8 +229,10 @@ app.post('/shipping-label', async function (req, res) {
                         pdfUrl: response.permalink_public,
                         missionRecordId
                     }
-                }).then(() => {
-                    console.log('now i submitted the slcak pdf url to zaper!!!')
+                }).then(zapResponse => {
+                    console.log('now i submitted the slcak pdf url to zaper!!! here is the zapier response:')
+                    console.log(zapResponse)
+                    
                     res.send({
                         statusCode: response.statusCode,
                         statusMessage: response.statusMessage,
