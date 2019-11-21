@@ -210,10 +210,12 @@ app.post('/shipping-label', async function (req, res) {
 
         console.log('yay everything is appended to the form! redy to send :))')
 
-        const slackResponse = (await fetch('https://slack.com/api/files.upload', {
+        const slackResponse = await fetch('https://slack.com/api/files.upload', {
             method: 'POST',
             body: form
-        })).json()
+        })
+
+        const slackResponseBody = await slackResponse.json()
 
         if (slackResponse.error) {
             console.log('i submitted pdf 2 slack but i got error :(')
@@ -223,7 +225,7 @@ app.post('/shipping-label', async function (req, res) {
         }
 
         console.log('i submitted pdf 2 slack and it is good so happy!!!!!')
-        console.log(slackResponse)
+        console.log(slackResponseBody)
 
         const zapResponse = await fetch('https://hooks.zapier.com/hooks/catch/507705/o47eshq/', {
             method: 'POST',
@@ -231,7 +233,7 @@ app.post('/shipping-label', async function (req, res) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                pdfUrl: response.permalink_public,
+                pdfUrl: slackResponseBody.permalink_public,
                 missionRecordId
             })
         })
