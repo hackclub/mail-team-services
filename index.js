@@ -82,7 +82,7 @@ async function reformatToA4(labels) {
 
     console.log('i rendered the pages to images hoo-rah!!')
 
-    const pdf = await PDFDocument.create()
+    const pdf = await pdflib.PDFDocument.create()
     const page = pdf.addPage()
 
     const externalLabelEmbedded = await pdf.embedPng(externalLabelImage)
