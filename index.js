@@ -215,10 +215,10 @@ app.post('/shipping-label', async function (req, res) {
             body: form
         })
 
-        if (!slackResponse.isOk) {
+        if (slackResponse.error) {
             console.log('i submitted pdf 2 slack but i got error :(')
-            console.log(slackResponse)
-            res.send(slackResponse)
+            console.log(slackResponse.error)
+            res.send(slackResponse.error)
             return
         }
 
