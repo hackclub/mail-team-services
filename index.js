@@ -89,11 +89,13 @@ async function reformatToA4(labels) {
     const externalLabelEmbedded = await pdf.embedPng(externalLabelImage)
     const internalLabelEmbedded = await pdf.embedPng(internalLabelImage)
 
+    const ppi = 48
+
     page.drawImage(internalLabelEmbedded, {
-        x: page.getWidth() / 2,
-        y: page.getHeight() / 2 - 200,
-        width: 160,
-        height: 240,
+        x: page.getWidth() / 2 + ppi*3,
+        y: page.getHeight() / 2 - ppi*4.5,
+        width: ppi*4,
+        height: ppi*6,
         rotate: pdflib.degrees(90)
     })
 
