@@ -91,16 +91,16 @@ async function reformatToA4(labels) {
     page.drawImage(internalLabelEmbedded, {
         x: 200,
         y: page.getHeight() / 2 - 300,
-        width: 400,
-        height: 600,
+        width: 160,
+        height: 240,
         rotate: pdflib.degrees(90)
     })
 
     page.drawImage(externalLabelEmbedded, {
         x: 200,
         y: page.getHeight() / 2 + 100,
-        width: 400,
-        height: 600,
+        width: 160,
+        height: 240,
         rotate: pdflib.degrees(90)
     })
 
