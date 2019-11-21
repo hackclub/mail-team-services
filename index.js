@@ -218,7 +218,7 @@ app.post('/shipping-label', async function (req, res) {
             }
             else {
                 console.log('i submitted pdf 2 slack and it is good so happy!!!!!')
-                // console.log(response)
+                console.log(response)
 
                 fetch('https://hooks.zapier.com/hooks/catch/507705/o47eshq/', {
                     method: 'POST',
@@ -231,7 +231,7 @@ app.post('/shipping-label', async function (req, res) {
                     })
                 }).then(zapResponse => {
                     console.log('now i submitted the slcak pdf url to zaper!!! here is the zapier response:')
-                    console.log(zapResponse)
+                    // console.log(zapResponse)
 
                     res.send({
                         statusCode: response.statusCode,
