@@ -219,7 +219,7 @@ app.post('/shipping-label', async function (req, res) {
             console.log('i submitted pdf 2 slack but i got error :(')
             console.log(slackResponse)
             res.send(slackResponse)
-            break;
+            return
         }
 
         console.log('i submitted pdf 2 slack and it is good so happy!!!!!')
