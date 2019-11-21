@@ -4,6 +4,11 @@ const FormData = require('form-data')
 const express = require('express')
 const pdflib = require('pdf-lib')
 const fetch = require('node-fetch')
+const AWS = require('aws-sdk')
+const uuid = require('uuid')
+
+AWS.config.update({region: 'us-west-2'})
+s3 = new AWS.S3({apiVersion: '2006-03-01'});
 
 const app = express()
 
@@ -224,25 +229,43 @@ app.post('/shipping-label', async function (req, res) {
         console.log('i submitted pdf 2 slack and it is good so happy!!!!!')
         console.log(slackResponseBody)
 
-        const zapResponse = await fetch('https://hooks.zapier.com/hooks/catch/507705/o47eshq/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                pdfUrl: slackResponseBody.permalink_public,
-                missionRecordId
-            })
-        })
-        
-        console.log('now i submitted the slcak pdf url to zaper!!! here is the zapier response:')
-        // console.log(zapResponse)
+        console.log('gona try to upload pdf to AWS S3 :o')
 
-        res.send({
-            statusCode: zapResponse.statusCode,
-            statusMessage: zapResponse.statusMessage,
-            message: zapResponse.message,
-            file: zapResponse.file,
+        // call S3 to retrieve upload file to specified bucket
+        var uploadParams = {
+            Bucket: 'hackclub-shipping-labels',
+            Key: missionRecordId+'.pdf',
+            Body: buffer
+        }
+
+        s3.upload(bucketError, function (bucketError, bucketData) {
+            if (s3Error) {
+                console.log('uh oh s3 says very bad hapin :(', s3Error);
+                return
+            } if (bucketData) {
+                console.log('s3 says upload suxes!!', bucketData.Location);
+            }
+    
+            const zapResponse = await fetch('https://hooks.zapier.com/hooks/catch/507705/o47eshq/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    pdfUrl: slackResponseBody.permalink_public,
+                    missionRecordId
+                })
+            })
+            
+            console.log('now i submitted the slcak pdf url to zaper!!! here is the zapier response:')
+            // console.log(zapResponse)
+    
+            res.send({
+                statusCode: zapResponse.statusCode,
+                statusMessage: zapResponse.statusMessage,
+                message: zapResponse.message,
+                file: zapResponse.file,
+            })
         })
     }
     catch (err) {
