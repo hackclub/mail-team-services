@@ -7,7 +7,6 @@ const pdflib = require('pdf-lib')
 const fetch = require('node-fetch')
 const atob = require('atob')
 const btoa = require('btoa')
-const request
 
 const app = express()
 
