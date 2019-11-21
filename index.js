@@ -238,34 +238,36 @@ app.post('/shipping-label', async function (req, res) {
             Body: buffer
         }
 
-        s3.upload(bucketError, function (bucketError, bucketData) {
-            if (s3Error) {
-                console.log('uh oh s3 says very bad hapin :(', s3Error);
-                return
-            } if (bucketData) {
-                console.log('s3 says upload suxes!!', bucketData.Location);
-            }
-    
-            const zapResponse = await fetch('https://hooks.zapier.com/hooks/catch/507705/o47eshq/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    pdfUrl: slackResponseBody.permalink_public,
-                    missionRecordId
-                })
+        const s3Response = await s3.upload(uploadParams).promise()
+        
+        if (s3Response.statusMessage != 'OK') {
+            console.log('uh oh s3 says very bad hapin :(');
+            console.log(s3Response)
+            return
+        }
+
+        console.log('s3 says upload suxes!!')
+        console.log(s3Response)
+
+        const zapResponse = await fetch('https://hooks.zapier.com/hooks/catch/507705/o47eshq/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                pdfUrl: slackResponseBody.permalink_public,
+                missionRecordId
             })
-            
-            console.log('now i submitted the slcak pdf url to zaper!!! here is the zapier response:')
-            // console.log(zapResponse)
-    
-            res.send({
-                statusCode: zapResponse.statusCode,
-                statusMessage: zapResponse.statusMessage,
-                message: zapResponse.message,
-                file: zapResponse.file,
-            })
+        })
+        
+        console.log('now i submitted the slcak pdf url to zaper!!! here is the zapier response:')
+        // console.log(zapResponse)
+
+        res.send({
+            statusCode: zapResponse.statusCode,
+            statusMessage: zapResponse.statusMessage,
+            message: zapResponse.message,
+            file: zapResponse.file,
         })
     }
     catch (err) {
