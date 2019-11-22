@@ -253,7 +253,8 @@ app.post('/shipping-label', async function (req, res) {
 
         console.log('first i resize the page')
 
-        firstPage.setSize(firstPage.getWidth() * 7/6, firstPage.getHeight() * 7/6)
+        firstPage.setSize(firstPage.getWidth() * 11/10, firstPage.getHeight() * 11/10)
+        firstPage.translateContent(0, firstPage.getHeight() * 1/11)
 
         var { width, height } = firstPage.getSize()
         
