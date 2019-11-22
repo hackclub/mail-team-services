@@ -134,8 +134,7 @@ async function reformatToA4(args) {
         missionRecordId,
         scenarioName,
         receiverName,
-        missionNote,
-        externalQrCode
+        missionNote
     } = args
 
     console.log('ok maam i will reformat these labels to fit the A4 sticky label sheets :)')
@@ -213,13 +212,6 @@ async function reformatToA4(args) {
         font: helveticaFont
     })
 
-    page.drawImage(externalQrImage, {
-        x: width - qrSize - 6,
-        y: 6,
-        width: qrSize,
-        height: qrSize,
-    })
-
     console.log('now i drawd those imuges on a new pdf')
 
     var newPdf = await pdf.save()
@@ -258,8 +250,14 @@ app.post('/shipping-label', async function (req, res) {
         var pages = pdfDoc.getPages()
         var firstPage = pages[0]
 
+        console.log('first i resize the page')
+
+        firstPage.setSize(page.getWidth() * 7/6, page.getHeight() * 7/6)
+
         var { width, height } = firstPage.getSize()
         
+        console.log('then i drawd the text to the first page')
+
         firstPage.drawText(receiverName, {
             x: 10,
             y: 34,
@@ -281,19 +279,17 @@ app.post('/shipping-label', async function (req, res) {
             font: helveticaFont
         })
 
-        console.log('i drawd the text to the first page')
-
         const externalQrBytes = await fetch(externalQrUrl).then((res) => res.arrayBuffer())
-        // const externalQrImage = await pdfDoc.embedPng(externalQrBytes)
+        const externalQrImage = await pdfDoc.embedPng(externalQrBytes)
 
         const qrSize = 48
 
-        // firstPage.drawImage(externalQrImage, {
-        //     x: width - qrSize - 6,
-        //     y: 6,
-        //     width: qrSize,
-        //     height: qrSize,
-        // })
+        firstPage.drawImage(externalQrImage, {
+            x: width - qrSize - 6,
+            y: 6,
+            width: qrSize,
+            height: qrSize,
+        })
 
         console.log('i drawd the qr code too :]')
 
@@ -363,8 +359,7 @@ app.post('/shipping-label', async function (req, res) {
                 missionRecordId,
                 scenarioName,
                 receiverName,
-                missionNote,
-                externalQrBytes
+                missionNote
             })
         }
 
