@@ -258,7 +258,7 @@ app.post('/shipping-label', async function (req, res) {
 
         const qrSize = 48
 
-        page.drawRectangle({
+        firstPage.drawRectangle({
             x: 0,
             y: 0,
             width: width,
