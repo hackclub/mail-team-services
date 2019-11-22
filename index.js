@@ -315,8 +315,8 @@ app.post('/shipping-label', async function (req, res) {
         })
 
         secondPage.drawImage(internalQrImage, {
-            x: secondPage.getWidth() / 2 - qrSize / 2,
-            y: secondPage.getHeight() / 2 - qrSize / 2,
+            x: 6 / 2 - qrSize / 2,
+            y: height - qrSize - 6,
             width: qrSize,
             height: qrSize,
         })
@@ -336,22 +336,22 @@ app.post('/shipping-label', async function (req, res) {
         })
         
         secondPage.drawText(receiverName, {
-            x: 10,
-            y: originalHeight-22,
+            x: 12 + qrSize,
+            y: height-22,
             size: 10,
             font: helveticaFont
         })
         
         secondPage.drawText(scenarioName, {
-            x: 10,
-            y: originalHeight-34,
+            x: 12 + qrSize,
+            y: height-34,
             size: 10,
             font: helveticaFont
         })
 
         secondPage.drawText(missionRecordId || '', {
-            x: 10,
-            y: originalHeight-46,
+            x: 12 + qrSize,
+            y: height-46,
             size: 10,
             font: helveticaFont
         })
