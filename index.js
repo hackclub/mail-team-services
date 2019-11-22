@@ -152,7 +152,7 @@ async function reformatToA4(args) {
     const externalLabelEmbedded = await pdf.embedPng(externalLabelImage)
     const internalLabelEmbedded = await pdf.embedPng(internalLabelImage)
 
-    const externalQrImage = await pdfDoc.embedPng(externalQrBytes)
+    const externalQrImage = await pdf.embedPng(externalQrBytes)
 
     const width = page.getWidth()
     const height = page.getHeight()
@@ -355,7 +355,6 @@ app.post('/shipping-label', async function (req, res) {
 
         if (format == 'A4') {
             newPdf = await reformatToA4({
-                newPdf,
                 missionRecordId,
                 scenarioName,
                 receiverName,
