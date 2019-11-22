@@ -254,9 +254,10 @@ app.post('/shipping-label', async function (req, res) {
         console.log('first i resize the page')
 
         const originalHeight = firstPage.getHeight()
+        const sizeOffset = originalHeight/8
 
-        firstPage.setSize(firstPage.getWidth() * 09/10, originalHeight * 9/10)
-        firstPage.translateContent(0, originalHeight * 1/10)
+        firstPage.setSize(firstPage.getWidth() + sizeOffset, originalHeight + sizeOffset)
+        firstPage.translateContent(0, sizeOffset)
 
         var { width, height } = firstPage.getSize()
         
@@ -264,21 +265,21 @@ app.post('/shipping-label', async function (req, res) {
 
         firstPage.drawText(receiverName, {
             x: 10,
-            y: 34,
+            y: 34-sizeOffset,
             size: 10,
             font: helveticaFont
         })
         
         firstPage.drawText(scenarioName, {
             x: 10,
-            y: 22,
+            y: 22-sizeOffset,
             size: 10,
             font: helveticaFont
         })
 
         firstPage.drawText(missionRecordId || '', {
             x: 10,
-            y: 10,
+            y: 10-sizeOffset,
             size: 10,
             font: helveticaFont
         })
@@ -290,7 +291,7 @@ app.post('/shipping-label', async function (req, res) {
 
         firstPage.drawImage(externalQrImage, {
             x: width - qrSize - 6,
-            y: 6,
+            y: 6-sizeOffset,
             width: qrSize,
             height: qrSize,
         })
