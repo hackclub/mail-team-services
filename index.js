@@ -115,28 +115,28 @@ async function reformatToA4(labels, missionRecordId, scenarioName, receiverName,
         
     page.drawText(receiverName, {
         x: 10,
-        y: height-20,
+        y: height-22,
         size: 10,
         font: helveticaFont
     })
     
     page.drawText(scenarioName, {
         x: 10,
-        y: height-30,
+        y: height-34,
         size: 10,
         font: helveticaFont
     })
 
     page.drawText(missionRecordId || '', {
         x: 10,
-        y: height-40,
+        y: height-46,
         size: 10,
         font: helveticaFont
     })
 
     page.drawText(missionNote || '', {
         x: 10,
-        y: height-50,
+        y: height-58,
         size: 10,
         font: helveticaFont
     })
@@ -183,14 +183,14 @@ app.post('/shipping-label', async function (req, res) {
         
         firstPage.drawText(receiverName, {
             x: 10,
-            y: 30,
+            y: 34,
             size: 10,
             font: helveticaFont
         })
         
         firstPage.drawText(scenarioName, {
             x: 10,
-            y: 20,
+            y: 22,
             size: 10,
             font: helveticaFont
         })
@@ -210,8 +210,8 @@ app.post('/shipping-label', async function (req, res) {
         const qrSize = 48
 
         firstPage.drawImage(externalQrImage, {
-            x: width - qrSize - 8,
-            y: 8,
+            x: width - qrSize - 6,
+            y: 6,
             width: qrSize,
             height: qrSize,
         })
@@ -253,23 +253,23 @@ app.post('/shipping-label', async function (req, res) {
             font: helveticaFont
         })
         
-        firstPage.drawText(receiverName, {
+        secondPage.drawText(receiverName, {
             x: 10,
-            y: height-20,
+            y: height-22,
             size: 10,
             font: helveticaFont
         })
         
-        firstPage.drawText(scenarioName, {
+        secondPage.drawText(scenarioName, {
             x: 10,
-            y: height-30,
+            y: height-34,
             size: 10,
             font: helveticaFont
         })
 
-        firstPage.drawText(missionRecordId || '', {
+        secondPage.drawText(missionRecordId || '', {
             x: 10,
-            y: height-40,
+            y: height-46,
             size: 10,
             font: helveticaFont
         })
