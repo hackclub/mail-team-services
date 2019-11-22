@@ -258,8 +258,8 @@ app.post('/shipping-label', async function (req, res) {
         const widthOffset = originalWidth/12
         const heightOffset = originalHeight/12
 
-        firstPage.setSize(originalWidth + widthOffset/3, originalHeight + heightOffset/3)
-        firstPage.translateContent(0, heightOffset)
+        firstPage.setSize(originalWidth + widthOffset, originalHeight + heightOffset)
+        firstPage.translateContent(0, heightOffset*3)
 
         var { width, height } = firstPage.getSize()
         
