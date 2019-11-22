@@ -108,6 +108,7 @@ async function reformatToA4(labels) {
         rotate: pdflib.degrees(90)
     })
 
+
     console.log('now i drawd those imuges on a new pdf')
 
     var newPdf = await pdf.save()
@@ -169,6 +170,15 @@ app.post('/shipping-label', async function (req, res) {
         const secondPage = pdfDoc.insertPage(1, [width, height])
 
         const qrSize = 50
+
+        secondPage.drawRectangle({
+            x: 0,
+            y: 0,
+            width,
+            height,
+            borderWidth: 5,
+            borderColor: pdflib.grayscale(0)
+        })
 
         secondPage.drawImage(internalQrImage, {
             x: secondPage.getWidth() / 2 - qrSize / 2,
