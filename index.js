@@ -162,7 +162,7 @@ async function reformatToA4(args) {
 
     page.drawImage(internalLabelEmbedded, {
         x: page.getWidth() / 2 + ppi*3,
-        y: page.getHeight() / 2 - ppi*4,
+        y: page.getHeight() / 2 - ppi*4.125,
         width: ppi*4,
         height: ppi*6,
         rotate: pdflib.degrees(90)
@@ -170,19 +170,10 @@ async function reformatToA4(args) {
 
     page.drawImage(externalLabelEmbedded, {
         x: page.getWidth() / 2 + ppi*3,
-        y: page.getHeight() / 2 + ppi*0,
+        y: page.getHeight() / 2 + ppi*0.125,
         width: ppi*4,
         height: ppi*6,
         rotate: pdflib.degrees(90)
-    })
-
-    page.drawRectangle({
-        x: 0,
-        y: 0,
-        width: width,
-        height: height,
-        borderWidth: 1,
-        borderColor: pdflib.grayscale(0)
     })
         
     page.drawText(receiverName, {
@@ -267,6 +258,15 @@ app.post('/shipping-label', async function (req, res) {
 
         const qrSize = 48
 
+        page.drawRectangle({
+            x: 0,
+            y: 0,
+            width: width,
+            height: height,
+            borderWidth: 1,
+            borderColor: pdflib.grayscale(0)
+        })
+
         firstPage.drawText(receiverName, {
             x: 10+qrSize,
             y: height-20,
@@ -323,7 +323,7 @@ app.post('/shipping-label', async function (req, res) {
 
         secondPage.drawText('Woah, what\'s that QR code up there??', {
             x: 10,
-            y: 22,
+            y: 24,
             size: 10,
             font: helveticaFont
         })
@@ -337,21 +337,21 @@ app.post('/shipping-label', async function (req, res) {
         
         secondPage.drawText(receiverName, {
             x: 10,
-            y: height-22,
+            y: originalHeight-22,
             size: 10,
             font: helveticaFont
         })
         
         secondPage.drawText(scenarioName, {
             x: 10,
-            y: height-34,
+            y: originalHeight-34,
             size: 10,
             font: helveticaFont
         })
 
         secondPage.drawText(missionRecordId || '', {
             x: 10,
-            y: height-46,
+            y: originalHeight-46,
             size: 10,
             font: helveticaFont
         })
