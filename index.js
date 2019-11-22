@@ -315,26 +315,20 @@ app.post('/shipping-label', async function (req, res) {
         })
 
         secondPage.drawImage(internalQrImage, {
-            x: 6 / 2 - qrSize / 2,
+            x: 6 + qrSize,
             y: height - qrSize - 6,
             width: qrSize,
             height: qrSize,
         })
 
-        secondPage.drawText('Woah, what\'s that QR code up there??', {
-            x: 10,
-            y: 24,
-            size: 10,
-            font: helveticaFont
+        secondPage.drawText('<— a disembodied voice tells you to scan this with your phone camera', {
+            x: 16,
+            y: height-12-qrSize,
+            size: 20,
+            font: helveticaFont,
+            rotate: pdflib.degrees(90)
         })
 
-        secondPage.drawText('Better scan it with your phone\'s camera app to find out!', {
-            x: 20,
-            y: 10,
-            size: 10,
-            font: helveticaFont
-        })
-        
         secondPage.drawText(receiverName, {
             x: 12 + qrSize,
             y: height-22,
