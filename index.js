@@ -209,8 +209,8 @@ app.post('/shipping-label', async function (req, res) {
 
         const qrSize = 48
 
-        secondPage.drawImage(externalQrImage, {
-            x: secondPage.getWidth() - qrSize - 8,
+        firstPage.drawImage(externalQrImage, {
+            x: width - qrSize - 8,
             y: 8,
             width: qrSize,
             height: qrSize,
