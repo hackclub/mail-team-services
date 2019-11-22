@@ -171,8 +171,8 @@ async function reformatToA4(args) {
     page.drawImage(externalLabelEmbedded, {
         x: page.getWidth() / 2 + ppi*3,
         y: page.getHeight() / 2 + ppi*0,
-        width: ppi*4*(6/7),
-        height: ppi*6*(6/7),
+        width: ppi*4,
+        height: ppi*6,
         rotate: pdflib.degrees(90)
     })
 
