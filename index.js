@@ -90,7 +90,7 @@ async function reformatToA4(labels) {
     const externalLabelEmbedded = await pdf.embedPng(externalLabelImage)
     const internalLabelEmbedded = await pdf.embedPng(internalLabelImage)
 
-    const ppi = 64
+    const ppi = 80
 
     page.drawImage(internalLabelEmbedded, {
         x: page.getWidth() / 2 + ppi*3,
