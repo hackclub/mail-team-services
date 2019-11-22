@@ -241,7 +241,7 @@ app.post('/shipping-label', async function (req, res) {
 
         secondPage.drawText('Woah, what\'s that QR code up there??', {
             x: 10,
-            y: 20,
+            y: 22,
             size: 10,
             font: helveticaFont
         })
