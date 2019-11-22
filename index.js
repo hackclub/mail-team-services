@@ -76,7 +76,7 @@ app.post('/bounce', function (req, res) {
     }
 })
 
-async function reformatToA4(labels) {
+async function reformatToA4(labels, missionRecordId, scenarioName, receiverName, missionNote) {
     console.log('ok maam i will reformat these labels to fit the A4 sticky label sheets :)')
 
     const externalLabelImage = await render(labels, 1)
@@ -85,10 +85,15 @@ async function reformatToA4(labels) {
     console.log('i rendered the pages to images hoo-rah!!')
 
     const pdf = await pdflib.PDFDocument.create()
+    const helveticaFont = await pdf.embedFont(pdflib.StandardFonts.Helvetica)
+
     const page = pdf.addPage()
 
     const externalLabelEmbedded = await pdf.embedPng(externalLabelImage)
     const internalLabelEmbedded = await pdf.embedPng(internalLabelImage)
+
+    const width = page.getWidth()
+    const height = page.getHeight()
 
     const ppi = 80
 
@@ -107,7 +112,34 @@ async function reformatToA4(labels) {
         height: ppi*6,
         rotate: pdflib.degrees(90)
     })
+        
+    page.drawText(receiverName, {
+        x: 10,
+        y: height-20,
+        size: 10,
+        font: helveticaFont
+    })
+    
+    page.drawText(scenarioName, {
+        x: 10,
+        y: height-30,
+        size: 10,
+        font: helveticaFont
+    })
 
+    page.drawText(missionRecordId || '', {
+        x: 10,
+        y: height-40,
+        size: 10,
+        font: helveticaFont
+    })
+
+    page.drawText(missionNote || '', {
+        x: 10,
+        y: height-50,
+        size: 10,
+        font: helveticaFont
+    })
 
     console.log('now i drawd those imuges on a new pdf')
 
@@ -121,6 +153,7 @@ app.post('/shipping-label', async function (req, res) {
     try {
         const {
             scenarioName,
+            receiverName,
             missionNote,
             fileData,
             fileName,
@@ -148,6 +181,13 @@ app.post('/shipping-label', async function (req, res) {
 
         var { width, height } = firstPage.getSize()
         
+        firstPage.drawText(receiverName, {
+            x: 10,
+            y: 30,
+            size: 10,
+            font: helveticaFont
+        })
+        
         firstPage.drawText(scenarioName, {
             x: 10,
             y: 20,
@@ -155,28 +195,40 @@ app.post('/shipping-label', async function (req, res) {
             font: helveticaFont
         })
 
-        firstPage.drawText(missionNote || '', {
+        firstPage.drawText(missionRecordId || '', {
             x: 10,
             y: 10,
-            size: 5,
+            size: 10,
             font: helveticaFont
         })
 
         console.log('i drawd the text to the first page')
+
+        const externalQrBytes = await fetch(externalQrUrl).then((res) => res.arrayBuffer())
+        const externalQrImage = await pdfDoc.embedPng(externalQrBytes)
+
+        const qrSize = 48
+
+        secondPage.drawImage(externalQrImage, {
+            x: secondPage.getWidth() - qrSize - 8,
+            y: 8,
+            width: qrSize,
+            height: qrSize,
+        })
+
+        console.log('i drawd the qr code too :]')
 
         const internalQrBytes = await fetch(internalQrUrl).then((res) => res.arrayBuffer())
         const internalQrImage = await pdfDoc.embedPng(internalQrBytes)
 
         const secondPage = pdfDoc.insertPage(1, [width, height])
 
-        const qrSize = 50
-
         secondPage.drawRectangle({
-            x: 0,
-            y: 0,
-            width,
-            height,
-            borderWidth: 5,
+            x: 2,
+            y: 2,
+            width: width-4,
+            height: height-4,
+            borderWidth: 2,
             borderColor: pdflib.grayscale(0)
         })
 
@@ -187,9 +239,37 @@ app.post('/shipping-label', async function (req, res) {
             height: qrSize,
         })
 
-        secondPage.drawText('Scan that code with your phone\'s camera app!', {
+        secondPage.drawText('Woah, what\'s that QR code up there??', {
             x: 10,
+            y: 20,
+            size: 10,
+            font: helveticaFont
+        })
+
+        secondPage.drawText('Better scan it with your phone\'s camera app to find out!', {
+            x: 20,
             y: 10,
+            size: 10,
+            font: helveticaFont
+        })
+        
+        firstPage.drawText(receiverName, {
+            x: 10,
+            y: height-20,
+            size: 10,
+            font: helveticaFont
+        })
+        
+        firstPage.drawText(scenarioName, {
+            x: 10,
+            y: height-30,
+            size: 10,
+            font: helveticaFont
+        })
+
+        firstPage.drawText(missionRecordId || '', {
+            x: 10,
+            y: height-40,
             size: 10,
             font: helveticaFont
         })
@@ -199,7 +279,7 @@ app.post('/shipping-label', async function (req, res) {
         var newPdf = await pdfDoc.save()
 
         if (format == 'A4') {
-            newPdf = await reformatToA4(newPdf)
+            newPdf = await reformatToA4(newPdf, missionRecordId, scenarioName, receiverName, missionNote)
         }
 
         buffer = Buffer.from(newPdf)
