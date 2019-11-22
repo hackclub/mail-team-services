@@ -134,7 +134,10 @@ async function reformatToA4(args) {
         missionRecordId,
         scenarioName,
         receiverName,
-        missionNote
+        missionNote,
+        externalLabelBytes,
+        internalLabelBytes,
+        externalQrBytes
     } = args
 
     console.log('ok maam i will reformat these labels to fit the A4 sticky label sheets :)')
@@ -149,10 +152,10 @@ async function reformatToA4(args) {
 
     const page = pdf.addPage()
 
-    const externalLabelEmbedded = await pdf.embedPng(externalLabelImage)
-    const internalLabelEmbedded = await pdf.embedPng(internalLabelImage)
+    const externalLabelEmbedded = await pdf.embedPng(externalLabelBytes)
+    const internalLabelEmbedded = await pdf.embedPng(internalLabelBytes)
 
-    const externalQrImage = await pdf.embedPng(externalQrBytes)
+    // const externalQrImage = await pdf.embedPng(externalQrBytes)
 
     const width = page.getWidth()
     const height = page.getHeight()
@@ -359,6 +362,8 @@ app.post('/shipping-label', async function (req, res) {
                 scenarioName,
                 receiverName,
                 missionNote,
+                internalLabelBytes,
+                externalLabelBytes,
                 labels: newPdf
             })
         }
