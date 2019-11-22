@@ -76,7 +76,16 @@ app.post('/bounce', function (req, res) {
     }
 })
 
-async function reformatToA4(labels, missionRecordId, scenarioName, receiverName, missionNote) {
+async function reformatToA4(args) {
+    const {
+        labels,
+        missionRecordId,
+        scenarioName,
+        receiverName,
+        missionNote,
+        externalQrCode
+    } = args
+
     console.log('ok maam i will reformat these labels to fit the A4 sticky label sheets :)')
 
     const externalLabelImage = await render(labels, 1)
@@ -279,7 +288,14 @@ app.post('/shipping-label', async function (req, res) {
         var newPdf = await pdfDoc.save()
 
         if (format == 'A4') {
-            newPdf = await reformatToA4(newPdf, missionRecordId, scenarioName, receiverName, missionNote)
+            newPdf = await reformatToA4({
+                newPdf,
+                missionRecordId,
+                scenarioName,
+                receiverName,
+                missionNote,
+                externalQrBytes
+            })
         }
 
         buffer = Buffer.from(newPdf)
