@@ -293,7 +293,7 @@ app.post('/shipping-label', async function (req, res) {
 
         firstPage.drawImage(externalQrImage, {
             x: width - qrSize - 6,
-            y: 6,
+            y: 400,
             width: qrSize,
             height: qrSize,
         })
