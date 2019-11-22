@@ -100,8 +100,8 @@ async function reformatToA4(labels, missionRecordId, scenarioName, receiverName,
     page.drawImage(internalLabelEmbedded, {
         x: page.getWidth() / 2 + ppi*3,
         y: page.getHeight() / 2 - ppi*4,
-        width: ppi*4,
-        height: ppi*6,
+        width: ppi*4*(4/5),
+        height: ppi*6*(4/5),
         rotate: pdflib.degrees(90)
     })
 
