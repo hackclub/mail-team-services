@@ -231,16 +231,16 @@ app.post('/shipping-label', async function (req, res) {
 
         console.log('gona try to upload pdf to AWS S3 :o')
 
-        // call S3 to retrieve upload file to specified bucket
-        var uploadParams = {
+        const uploadParams = {
             Bucket: 'hackclub-shipping-labels',
             Key: missionRecordId+'.pdf',
+            ACL: 'public-read',
             Body: buffer
         }
 
         const s3Response = await s3.upload(uploadParams).promise()
         
-        if (s3Response.statusMessage != 'OK') {
+        if (s3Response.err) {
             console.log('uh oh s3 says very bad hapin :(');
             console.log(s3Response)
             return
@@ -255,7 +255,7 @@ app.post('/shipping-label', async function (req, res) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                pdfUrl: slackResponseBody.permalink_public,
+                pdfUrl: s3Response.Location,
                 missionRecordId
             })
         })
