@@ -315,7 +315,7 @@ app.post('/shipping-label', async function (req, res) {
         })
 
         secondPage.drawImage(internalQrImage, {
-            x: 6 + qrSize,
+            x: 6,
             y: height - qrSize - 6,
             width: qrSize,
             height: qrSize,
@@ -326,7 +326,7 @@ app.post('/shipping-label', async function (req, res) {
             y: height-12-qrSize,
             size: 20,
             font: helveticaFont,
-            rotate: pdflib.degrees(90)
+            rotate: pdflib.degrees(-90)
         })
 
         secondPage.drawText(receiverName, {
