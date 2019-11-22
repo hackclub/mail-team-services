@@ -321,7 +321,7 @@ app.post('/shipping-label', async function (req, res) {
             height: qrSize,
         })
 
-        secondPage.drawText('<— a disembodied voice tells you to scan this with your phone camera', {
+        secondPage.drawText('<— scan this with your phone camera', {
             x: 16,
             y: height-12-qrSize,
             size: 20,
