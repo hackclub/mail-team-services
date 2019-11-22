@@ -46,7 +46,7 @@ module.exports = async function(pdf, pageIndex) {
   var page = await pdfDocument.getPage(pageIndex)
   
   // Render the page on a Node canvas with 100% scale.
-  var viewport = page.getViewport({ scale: 1.0, });
+  var viewport = page.getViewport({ scale: 2.0, });
   var canvasFactory = new NodeCanvasFactory();
   var canvasAndContext = canvasFactory.create(viewport.width, viewport.height);
   var renderContext = {
