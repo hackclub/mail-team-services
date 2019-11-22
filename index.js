@@ -221,7 +221,7 @@ async function reformatToA4(args) {
 app.post('/shipping-label', async function (req, res) {
     console.log('oh boy oh boy here comes a request to prepare a shipping label!!')
 
-    try {
+    // try {
         const {
             scenarioName,
             receiverName,
@@ -440,10 +440,10 @@ app.post('/shipping-label', async function (req, res) {
             message: zapResponse.message,
             file: zapResponse.file,
         })
-    }
-    catch (err) {
-        console.log('ummmmm something bad hapend :(((')
-        console.log(err)
-        res.send(err)
-    }
+    // }
+    // catch (err) {
+    //     console.log('ummmmm something bad hapend :(((')
+    //     console.log(err)
+    //     res.send(err)
+    // }
 })
