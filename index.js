@@ -255,10 +255,10 @@ app.post('/shipping-label', async function (req, res) {
 
         const originalHeight = firstPage.getHeight()
         const originalWidth = firstPage.getWidth()
-        const widthOffset = originalWidth/32
-        const heightOffset = originalHeight/32
+        const widthOffset = originalWidth/10
+        const heightOffset = originalHeight/10
 
-        // firstPage.setSize(originalWidth + widthOffset, originalHeight + heightOffset)
+        firstPage.setSize(originalWidth + widthOffset, originalHeight + heightOffset)
         // firstPage.translateContent(0, heightOffset)
 
         var { width, height } = firstPage.getSize()
@@ -293,7 +293,7 @@ app.post('/shipping-label', async function (req, res) {
 
         firstPage.drawImage(externalQrImage, {
             x: width - qrSize - 6,
-            y: 400,
+            y: 300,
             width: qrSize,
             height: qrSize,
         })
