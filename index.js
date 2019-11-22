@@ -6,14 +6,16 @@ const pdflib = require('pdf-lib')
 const fetch = require('node-fetch')
 const AWS = require('aws-sdk')
 const uuid = require('uuid')
+const Airtable = require('airtable')
 
 AWS.config.update({region: 'us-west-2'})
 s3 = new AWS.S3({apiVersion: '2006-03-01'});
 
+const airtable = new Airtable({apiKey: process.env.AIRTABLE_API_KEY})
+const operationsBase = airtable.base('apptEEFG5HTfGQE7h')
+
 const app = express()
-
 app.use(express.json())
-
 app.listen(process.env.PORT || 3000, () => {
     console.log("Server running on port 3000");
 });
