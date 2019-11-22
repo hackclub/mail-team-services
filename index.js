@@ -103,6 +103,8 @@ async function reformatToA4(args) {
     const externalLabelEmbedded = await pdf.embedPng(externalLabelImage)
     const internalLabelEmbedded = await pdf.embedPng(internalLabelImage)
 
+    const externalQrImage = await pdfDoc.embedPng(externalQrBytes)
+
     const width = page.getWidth()
     const height = page.getHeight()
 
@@ -111,17 +113,26 @@ async function reformatToA4(args) {
     page.drawImage(internalLabelEmbedded, {
         x: page.getWidth() / 2 + ppi*3,
         y: page.getHeight() / 2 - ppi*4,
-        width: ppi*4*(4/5),
-        height: ppi*6*(4/5),
+        width: ppi*4,
+        height: ppi*6,
         rotate: pdflib.degrees(90)
     })
 
     page.drawImage(externalLabelEmbedded, {
         x: page.getWidth() / 2 + ppi*3,
         y: page.getHeight() / 2 + ppi*0,
-        width: ppi*4,
-        height: ppi*6,
+        width: ppi*4*(6/7),
+        height: ppi*6*(6/7),
         rotate: pdflib.degrees(90)
+    })
+
+    page.drawRectangle({
+        x: 0,
+        y: 0,
+        width: width,
+        height: height,
+        borderWidth: 1,
+        borderColor: pdflib.grayscale(0)
     })
         
     page.drawText(receiverName, {
@@ -150,6 +161,13 @@ async function reformatToA4(args) {
         y: height-58,
         size: 10,
         font: helveticaFont
+    })
+
+    page.drawImage(externalQrImage, {
+        x: width - qrSize - 6,
+        y: 6,
+        width: qrSize,
+        height: qrSize,
     })
 
     console.log('now i drawd those imuges on a new pdf')
@@ -216,16 +234,16 @@ app.post('/shipping-label', async function (req, res) {
         console.log('i drawd the text to the first page')
 
         const externalQrBytes = await fetch(externalQrUrl).then((res) => res.arrayBuffer())
-        const externalQrImage = await pdfDoc.embedPng(externalQrBytes)
+        // const externalQrImage = await pdfDoc.embedPng(externalQrBytes)
 
         const qrSize = 48
 
-        firstPage.drawImage(externalQrImage, {
-            x: width - qrSize - 6,
-            y: 6,
-            width: qrSize,
-            height: qrSize,
-        })
+        // firstPage.drawImage(externalQrImage, {
+        //     x: width - qrSize - 6,
+        //     y: 6,
+        //     width: qrSize,
+        //     height: qrSize,
+        // })
 
         console.log('i drawd the qr code too :]')
 
