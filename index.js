@@ -359,7 +359,8 @@ app.post('/shipping-label', async function (req, res) {
                 missionRecordId,
                 scenarioName,
                 receiverName,
-                missionNote
+                missionNote,
+                labels: newPdf
             })
         }
 
