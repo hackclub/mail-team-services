@@ -224,11 +224,11 @@ app.post('/shipping-label', async function (req, res) {
         const secondPage = pdfDoc.insertPage(1, [width, height])
 
         secondPage.drawRectangle({
-            x: 2,
-            y: 2,
-            width: width-4,
-            height: height-4,
-            borderWidth: 2,
+            x: 0,
+            y: 0,
+            width: width,
+            height: height,
+            borderWidth: 1,
             borderColor: pdflib.grayscale(0)
         })
 
