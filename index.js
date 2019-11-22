@@ -255,8 +255,8 @@ app.post('/shipping-label', async function (req, res) {
 
         const originalHeight = firstPage.getHeight()
         const originalWidth = firstPage.getWidth()
-        const widthOffset = originalWidth/10
-        const heightOffset = originalHeight/10
+        const widthOffset = originalWidth/8
+        const heightOffset = originalHeight/8
 
         firstPage.setSize(originalWidth + widthOffset, originalHeight + heightOffset)
         // firstPage.translateContent(0, heightOffset)
@@ -265,23 +265,25 @@ app.post('/shipping-label', async function (req, res) {
         
         console.log('then i drawd the text to the first page')
 
+        const qrSize = 48
+
         firstPage.drawText(receiverName, {
-            x: 10,
-            y: 34,
+            x: 10+qrSize,
+            y: height-20,
             size: 10,
             font: helveticaFont
         })
         
         firstPage.drawText(scenarioName, {
-            x: 10,
-            y: 22,
+            x: 10+qrSize,
+            y: height-32,
             size: 10,
             font: helveticaFont
         })
 
         firstPage.drawText(missionRecordId || '', {
-            x: 10,
-            y: 10,
+            x: 10+qrSize,
+            y: height-44,
             size: 10,
             font: helveticaFont
         })
@@ -289,11 +291,9 @@ app.post('/shipping-label', async function (req, res) {
         const externalQrBytes = await fetch(externalQrUrl).then((res) => res.arrayBuffer())
         const externalQrImage = await pdfDoc.embedPng(externalQrBytes)
 
-        const qrSize = 48
-
         firstPage.drawImage(externalQrImage, {
-            x: width - qrSize - 6,
-            y: 300,
+            x: 6,
+            y: height-qrSize-6,
             width: qrSize,
             height: qrSize,
         })
