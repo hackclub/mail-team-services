@@ -20,6 +20,56 @@ app.listen(process.env.PORT || 3000, () => {
     console.log("Server running on port 3000");
 });
 
+app.post('/scan', function (req, res) {
+    console.log('sum1 scanned a package!!')
+
+    try {
+        const {
+            missionRecordId,
+            scanType = 'internal'
+        } = req.body
+
+        console.log(`its a ${scanType} scan for mission ${missionRecordId}. getin the airtable record`)
+
+        operationsBase('Mail Missions').find(missionRecordId, (err, record) => {
+            if (err) throw new Error('Could not find Mail Mission with Record ID: '+missionRecordId)
+            
+            console.log('ok got the record!', record)
+
+            const scanTime = record['Sender Scan Time']
+            const receiverName = record['Receiver Name']
+            const senderName = record['Sender Name']
+            const scenarioName = record['Scenario Name']
+            const trackingUrl = record['Tracking URL']
+
+            console.log(`this is a ${scenarioName} from ${senderName} to ${receiverName}`)
+
+            let scanned = scanTime && true
+
+            if (!scanned) {
+                fetch('https://hooks.zapier.com/hooks/catch/507705/o477r92/', {
+                    method: 'POST',
+                    body: {
+                        missionRecordId,
+                        scanType
+                    }
+                })
+            }
+
+            res.send({
+                scanned,
+                receiverName,
+                senderName
+            })
+        })
+    }
+    catch (err) {
+        console.log('ummmmm something bad hapend :(((')
+        console.log(err)
+        res.error(err)
+    }
+})
+
 app.post('/bounce', function (req, res) {
     console.log('oh boy oh boy here comes a request!!')
 
