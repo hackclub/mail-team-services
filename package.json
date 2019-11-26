@@ -22,6 +22,7 @@
     "node-fetch": "^2.6.0",
     "pdf-lib": "^1.2.1",
     "pdfjs-dist": "^2.2.228",
+    "request-promise-native": "^1.0.8",
     "uuid": "^3.3.3"
   }
 }

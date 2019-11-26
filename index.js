@@ -1,18 +1,22 @@
 const render = require('./render')
 
 const FormData = require('form-data')
+const request = require('request-promise-native')
 const express = require('express')
 const pdflib = require('pdf-lib')
 const fetch = require('node-fetch')
 const AWS = require('aws-sdk')
 const uuid = require('uuid')
-const Airtable = require('airtable')
+const AirtablePlus = require('airtable-plus')
 
 AWS.config.update({region: 'us-west-2'})
 s3 = new AWS.S3({apiVersion: '2006-03-01'});
 
-const airtable = new Airtable({apiKey: process.env.AIRTABLE_API_KEY})
-const operationsBase = airtable.base('apptEEFG5HTfGQE7h')
+const mailMissionsTable = new AirtablePlus({
+    apiKey: process.env.AIRTABLE_API_KEY,
+    baseID: 'apptEEFG5HTfGQE7h',
+    tableName: 'Mail Missions'
+})
 
 const app = express()
 app.use(express.json())
@@ -20,7 +24,7 @@ app.listen(process.env.PORT || 3000, () => {
     console.log("Server running on port 3000");
 });
 
-app.post('/scan', function (req, res) {
+app.post('/scan', async function (req, res) {
     console.log('sum1 scanned a package!!')
 
     try {
@@ -31,36 +35,38 @@ app.post('/scan', function (req, res) {
 
         console.log(`its a ${scanType} scan for mission ${missionRecordId}. getin the airtable record`)
 
-        operationsBase('Mail Missions').find(missionRecordId, (err, record) => {
-            if (err) throw new Error('Could not find Mail Mission with Record ID: '+missionRecordId)
-            
-            console.log('ok got the record!', record)
+        const missionRecord = await mailMissionsTable.find(missionRecordId)
 
-            const scanTime = record['Sender Scan Time']
-            const receiverName = record['Receiver Name']
-            const senderName = record['Sender Name']
-            const scenarioName = record['Scenario Name']
-            const trackingUrl = record['Tracking URL']
+        if (!missionRecord) throw new Error('Could not find Mail Mission with Record ID: '+missionRecordId)
+        
+        console.log('ok got the record!', missionRecord)
 
-            console.log(`this is a ${scenarioName} from ${senderName} to ${receiverName}`)
+        const scanTime = missionRecord['Sender Scan Time']
+        const receiverName = missionRecord['Receiver Name']
+        const senderName = missionRecord['Sender Name']
+        const scenarioName = missionRecord['Scenario Name']
+        const trackingUrl = missionRecord['Tracking URL']
 
-            let scanned = scanTime && true
+        console.log(`this is a ${scenarioName} from ${senderName} to ${receiverName}`)
 
-            if (!scanned) {
-                fetch('https://hooks.zapier.com/hooks/catch/507705/o477r92/', {
-                    method: 'POST',
-                    body: {
-                        missionRecordId,
-                        scanType
-                    }
-                })
-            }
+        let scanned = scanTime && true
 
-            res.send({
-                scanned,
-                receiverName,
-                senderName
+        if (!scanned) {
+            fetch('https://hooks.zapier.com/hooks/catch/507705/o477r92/', {
+                method: 'POST',
+                body: {
+                    missionRecordId,
+                    scanType
+                }
             })
+        }
+
+        res.send({
+            scanned,
+            receiverName,
+            senderName,
+            trackingUrl,
+            scenarioName
         })
     }
     catch (err) {
