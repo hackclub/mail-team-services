@@ -64,6 +64,8 @@ app.post('/scan', async function (req, res) {
 
         res.send({
             scanned,
+            senderScanTime,
+            receiverScanTime,
             receiverName,
             senderName,
             trackingUrl,
