@@ -213,232 +213,239 @@ async function reformatToA4(args) {
 app.post('/shipping-label', async function (req, res) {
     console.log('oh boy oh boy here comes a request to prepare a shipping label!!')
 
-    const {
-        scenarioName,
-        receiverName,
-        missionNote,
-        fileData,
-        fileName,
-        message,
-        thread,
-        token,
-        channel,
-        internalQrUrl,
-        externalQrUrl,
-        missionRecordId,
-        format
-    } = req.body
-
-    console.log(`hmmm, lots of stuff to unpack here for this ${scenarioName} shipment...`)
-
-    var buffer = Buffer.from(fileData, 'base64')
-
-    var pdfDoc = await pdflib.PDFDocument.load(buffer)
-    var helveticaFont = await pdfDoc.embedFont(pdflib.StandardFonts.Helvetica)
-
-    console.log('i loaded the documint from the base64 data suxesfuly')
-
-    var pages = pdfDoc.getPages()
-    var firstPage = pages[0]
-
-    console.log('first i resize the page')
-
-    const originalHeight = firstPage.getHeight()
-    const originalWidth = firstPage.getWidth()
-    const widthOffset = originalWidth/7
-    const heightOffset = originalHeight/7
-
-    firstPage.setSize(originalWidth + widthOffset, originalHeight + heightOffset)
-    // firstPage.translateContent(0, heightOffset)
-
-    var { width, height } = firstPage.getSize()
-    
-    console.log('then i drawd the text to the first page')
-
-    const qrSize = 48
-
-    firstPage.drawRectangle({
-        x: 0,
-        y: 0,
-        width: width,
-        height: height,
-        borderWidth: 1,
-        borderColor: pdflib.grayscale(0)
-    })
-
-    firstPage.drawText(receiverName, {
-        x: 10+qrSize,
-        y: height-20,
-        size: 10,
-        font: helveticaFont
-    })
-    
-    firstPage.drawText(scenarioName, {
-        x: 10+qrSize,
-        y: height-32,
-        size: 10,
-        font: helveticaFont
-    })
-
-    firstPage.drawText(missionRecordId || '', {
-        x: 10+qrSize,
-        y: height-44,
-        size: 10,
-        font: helveticaFont
-    })
-
-    const externalQrBytes = await fetch(externalQrUrl).then((res) => res.arrayBuffer())
-    const externalQrImage = await pdfDoc.embedPng(externalQrBytes)
-
-    firstPage.drawImage(externalQrImage, {
-        x: 6,
-        y: height-qrSize-6,
-        width: qrSize,
-        height: qrSize,
-    })
-
-    console.log('i drawd the qr code too :]')
-
-    const internalQrBytes = await fetch(internalQrUrl).then((res) => res.arrayBuffer())
-    const internalQrImage = await pdfDoc.embedPng(internalQrBytes)
-
-    const secondPage = pdfDoc.insertPage(1, [width, height])
-
-    secondPage.drawRectangle({
-        x: 0,
-        y: 0,
-        width: width,
-        height: height,
-        borderWidth: 1,
-        borderColor: pdflib.grayscale(0)
-    })
-
-    secondPage.drawImage(internalQrImage, {
-        x: 6,
-        y: height - qrSize - 6,
-        width: qrSize,
-        height: qrSize,
-    })
-
-    secondPage.drawText('<— scan this with your phone camera', {
-        x: 16,
-        y: height-12-qrSize,
-        size: 20,
-        font: helveticaFont,
-        rotate: pdflib.degrees(-90)
-    })
-
-    secondPage.drawText(receiverName, {
-        x: 12 + qrSize,
-        y: height-22,
-        size: 10,
-        font: helveticaFont
-    })
-    
-    secondPage.drawText(scenarioName, {
-        x: 12 + qrSize,
-        y: height-34,
-        size: 10,
-        font: helveticaFont
-    })
-
-    secondPage.drawText(missionRecordId || '', {
-        x: 12 + qrSize,
-        y: height-46,
-        size: 10,
-        font: helveticaFont
-    })
-
-    console.log('i added a second page with a qr code on it')
-
-    var newPdf = await pdfDoc.save()
-
-    if (format == 'A4') {
-        newPdf = await reformatToA4({
-            missionRecordId,
+    // try {
+        const {
             scenarioName,
             receiverName,
             missionNote,
-            externalQrBytes,
-            labels: newPdf
+            fileData,
+            fileName,
+            message,
+            thread,
+            token,
+            channel,
+            internalQrUrl,
+            externalQrUrl,
+            missionRecordId,
+            format
+        } = req.body
+
+        console.log(`hmmm, lots of stuff to unpack here for this ${scenarioName} shipment...`)
+
+        var buffer = Buffer.from(fileData, 'base64')
+
+        var pdfDoc = await pdflib.PDFDocument.load(buffer)
+        var helveticaFont = await pdfDoc.embedFont(pdflib.StandardFonts.Helvetica)
+
+        console.log('i loaded the documint from the base64 data suxesfuly')
+
+        var pages = pdfDoc.getPages()
+        var firstPage = pages[0]
+
+        console.log('first i resize the page')
+
+        const originalHeight = firstPage.getHeight()
+        const originalWidth = firstPage.getWidth()
+        const widthOffset = originalWidth/7
+        const heightOffset = originalHeight/7
+
+        firstPage.setSize(originalWidth + widthOffset, originalHeight + heightOffset)
+        // firstPage.translateContent(0, heightOffset)
+
+        var { width, height } = firstPage.getSize()
+        
+        console.log('then i drawd the text to the first page')
+
+        const qrSize = 48
+
+        firstPage.drawRectangle({
+            x: 0,
+            y: 0,
+            width: width,
+            height: height,
+            borderWidth: 1,
+            borderColor: pdflib.grayscale(0)
         })
-    }
 
-    buffer = Buffer.from(newPdf)
+        firstPage.drawText(receiverName, {
+            x: 10+qrSize,
+            y: height-20,
+            size: 10,
+            font: helveticaFont
+        })
+        
+        firstPage.drawText(scenarioName, {
+            x: 10+qrSize,
+            y: height-32,
+            size: 10,
+            font: helveticaFont
+        })
 
-    console.log('now i saved that pdf and turned it bac to a buffer')
+        firstPage.drawText(missionRecordId || '', {
+            x: 10+qrSize,
+            y: height-44,
+            size: 10,
+            font: helveticaFont
+        })
 
-    var form = new FormData()
+        const externalQrBytes = await fetch(externalQrUrl).then((res) => res.arrayBuffer())
+        const externalQrImage = await pdfDoc.embedPng(externalQrBytes)
 
-    console.log('ok i made a buffer and a form')
+        firstPage.drawImage(externalQrImage, {
+            x: 6,
+            y: height-qrSize-6,
+            width: qrSize,
+            height: qrSize,
+        })
 
-    form.append('token', token)
-    form.append('thread_ts', thread)
-    form.append('channels', channel)
-    form.append('filename', fileName)
-    form.append('filetype', 'pdf')
-    form.append('initial_comment', message)
-    form.append('file', buffer, {
-        filename: fileName+'.pdf'
-    })
+        console.log('i drawd the qr code too :]')
 
-    console.log('yay everything is appended to the form! redy to send :))')
+        const internalQrBytes = await fetch(internalQrUrl).then((res) => res.arrayBuffer())
+        const internalQrImage = await pdfDoc.embedPng(internalQrBytes)
 
-    const slackResponse = await fetch('https://slack.com/api/files.upload', {
-        method: 'POST',
-        body: form
-    })
+        const secondPage = pdfDoc.insertPage(1, [width, height])
 
-    const slackResponseBody = await slackResponse.json()
+        secondPage.drawRectangle({
+            x: 0,
+            y: 0,
+            width: width,
+            height: height,
+            borderWidth: 1,
+            borderColor: pdflib.grayscale(0)
+        })
 
-    if (slackResponse.error) {
-        console.log('i submitted pdf 2 slack but i got error :(')
-        console.log(slackResponse.error)
-        res.send(slackResponse.error)
-        return
-    }
+        secondPage.drawImage(internalQrImage, {
+            x: 6,
+            y: height - qrSize - 6,
+            width: qrSize,
+            height: qrSize,
+        })
 
-    console.log('i submitted pdf 2 slack and it is good so happy!!!!!')
-    console.log(slackResponseBody)
+        secondPage.drawText('<— scan this with your phone camera', {
+            x: 16,
+            y: height-12-qrSize,
+            size: 20,
+            font: helveticaFont,
+            rotate: pdflib.degrees(-90)
+        })
 
-    console.log('gona try to upload pdf to AWS S3 :o')
+        secondPage.drawText(receiverName, {
+            x: 12 + qrSize,
+            y: height-22,
+            size: 10,
+            font: helveticaFont
+        })
+        
+        secondPage.drawText(scenarioName, {
+            x: 12 + qrSize,
+            y: height-34,
+            size: 10,
+            font: helveticaFont
+        })
 
-    const uploadParams = {
-        Bucket: 'hackclub-shipping-labels',
-        Key: missionRecordId+'.pdf',
-        ACL: 'public-read',
-        Body: buffer
-    }
+        secondPage.drawText(missionRecordId || '', {
+            x: 12 + qrSize,
+            y: height-46,
+            size: 10,
+            font: helveticaFont
+        })
 
-    const s3Response = await s3.upload(uploadParams).promise()
-    
-    if (s3Response.err) {
-        console.log('uh oh s3 says very bad hapin :(');
+        console.log('i added a second page with a qr code on it')
+
+        var newPdf = await pdfDoc.save()
+
+        if (format == 'A4') {
+            newPdf = await reformatToA4({
+                missionRecordId,
+                scenarioName,
+                receiverName,
+                missionNote,
+                externalQrBytes,
+                labels: newPdf
+            })
+        }
+
+        buffer = Buffer.from(newPdf)
+
+        console.log('now i saved that pdf and turned it bac to a buffer')
+
+        var form = new FormData()
+
+        console.log('ok i made a buffer and a form')
+
+        form.append('token', token)
+        form.append('thread_ts', thread)
+        form.append('channels', channel)
+        form.append('filename', fileName)
+        form.append('filetype', 'pdf')
+        form.append('initial_comment', message)
+        form.append('file', buffer, {
+            filename: fileName+'.pdf'
+        })
+
+        console.log('yay everything is appended to the form! redy to send :))')
+
+        const slackResponse = await fetch('https://slack.com/api/files.upload', {
+            method: 'POST',
+            body: form
+        })
+
+        const slackResponseBody = await slackResponse.json()
+
+        if (slackResponse.error) {
+            console.log('i submitted pdf 2 slack but i got error :(')
+            console.log(slackResponse.error)
+            res.send(slackResponse.error)
+            return
+        }
+
+        console.log('i submitted pdf 2 slack and it is good so happy!!!!!')
+        console.log(slackResponseBody)
+
+        console.log('gona try to upload pdf to AWS S3 :o')
+
+        const uploadParams = {
+            Bucket: 'hackclub-shipping-labels',
+            Key: missionRecordId+'.pdf',
+            ACL: 'public-read',
+            Body: buffer
+        }
+
+        const s3Response = await s3.upload(uploadParams).promise()
+        
+        if (s3Response.err) {
+            console.log('uh oh s3 says very bad hapin :(');
+            console.log(s3Response)
+            return
+        }
+
+        console.log('s3 says upload suxes!!')
         console.log(s3Response)
-        return
-    }
 
-    console.log('s3 says upload suxes!!')
-    console.log(s3Response)
-
-    const zapResponse = await fetch('https://hooks.zapier.com/hooks/catch/507705/o47eshq/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            pdfUrl: s3Response.Location,
-            missionRecordId
+        const zapResponse = await fetch('https://hooks.zapier.com/hooks/catch/507705/o47eshq/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                pdfUrl: s3Response.Location,
+                missionRecordId
+            })
         })
-    })
-    
-    console.log('now i submitted the slcak pdf url to zaper!!! here is the zapier response:')
-    // console.log(zapResponse)
+        
+        console.log('now i submitted the slcak pdf url to zaper!!! here is the zapier response:')
+        // console.log(zapResponse)
 
-    res.send({
-        statusCode: zapResponse.statusCode,
-        statusMessage: zapResponse.statusMessage,
-        message: zapResponse.message,
-        file: zapResponse.file,
-    })
+        res.send({
+            statusCode: zapResponse.statusCode,
+            statusMessage: zapResponse.statusMessage,
+            message: zapResponse.message,
+            file: zapResponse.file,
+        })
+    // }
+    // catch (err) {
+    //     console.log('ummmmm something bad hapend :(((')
+    //     console.log(err)
+    //     res.send(err)
+    // }
 })
