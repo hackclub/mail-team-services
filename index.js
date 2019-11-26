@@ -41,7 +41,8 @@ app.post('/scan', async function (req, res) {
         
         console.log('ok got the record!', missionRecord)
 
-        const scanTime = missionRecord['Sender Scan Time']
+        const senderScanTime = missionRecord['Sender Scan Time']
+        const receiverScanTime = missionRecord['Receiver Scan Time']
         const receiverName = missionRecord['Receiver Name']
         const senderName = missionRecord['Sender Name']
         const scenarioName = missionRecord['Scenario Name']
@@ -49,7 +50,7 @@ app.post('/scan', async function (req, res) {
 
         console.log(`this is a ${scenarioName} from ${senderName} to ${receiverName}`)
 
-        let scanned = scanTime && true
+        let scanned = senderScanTime && true
 
         if (!scanned) {
             fetch('https://hooks.zapier.com/hooks/catch/507705/o477r92/', {
