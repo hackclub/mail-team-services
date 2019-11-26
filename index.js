@@ -24,7 +24,7 @@ app.listen(process.env.PORT || 3000, () => {
     console.log("Server running on port 3000");
 });
 
-app.post('/scan', async function (req, res) {
+app.get('/scan', async function (req, res) {
     console.log('sum1 scanned a package!!')
 
     try {
