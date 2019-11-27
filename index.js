@@ -53,7 +53,7 @@ app.post('/scan', async function (req, res) {
         console.log(`its a ${scanType} scan for mission ${missionRecordId}. getin the airtable record`)
         console.log(req)
 
-        const missionRecord = await fetchMailMission(missionRecordId)
+        const missionRecord = await mailMissionsTable.find(missionRecordId)
 
         console.log(missionRecord)
 
