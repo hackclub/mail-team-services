@@ -69,7 +69,7 @@ app.post('/scan', async function (req, res) {
         const scenarioName = missionRecord.fields['Scenario Name']
         const trackingUrl = missionRecord.fields['Tracking URL']
 
-        let scanned = senderScanTime && true
+        let scanned = !!senderScanTime
 
         console.log(`this is a ${scenarioName} from ${senderName} to ${receiverName} which ${scanned} been scanned`)
 
