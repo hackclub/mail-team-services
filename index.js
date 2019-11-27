@@ -71,13 +71,7 @@ app.post('/scan', async function (req, res) {
 
         let scanned = senderScanTime && true
 
-        console.log(`
-            this is a ${scenarioName} 
-            from ${senderName} 
-            to ${receiverName} 
-            which ${scanned ? 'has' : 'has not'} 
-            been scanned`
-        )
+        console.log(`this is a ${scenarioName} from ${senderName} to ${receiverName} which ${scanned ? 'has' : 'has not'} been scanned`)
 
         if (!scanned) {
             fetch('https://hooks.zapier.com/hooks/catch/507705/o477r92/', {
