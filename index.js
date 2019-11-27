@@ -69,11 +69,12 @@ app.post('/scan', async function (req, res) {
         const scenarioName = missionRecord.fields['Scenario Name']
         const trackingUrl = missionRecord.fields['Tracking URL']
 
-        let scanned = senderScanTime || false
+        let scannedExternal = senderScanTime || false
+        let scannedInternal = receiverScanTime || false
 
         console.log(`this is a ${scenarioName} from ${senderName} to ${receiverName} which ${scanned} been scanned`)
 
-        if (!scanned) {
+        if (scanType == 'external' && !scannedExternal) {
             fetch('https://hooks.zapier.com/hooks/catch/507705/o477r92/', {
                 method: 'POST',
                 body: {
@@ -84,7 +85,8 @@ app.post('/scan', async function (req, res) {
         }
 
         res.send({
-            scanned,
+            scannedInternal,
+            scannedExternal,
             senderScanTime,
             receiverScanTime,
             receiverName,
