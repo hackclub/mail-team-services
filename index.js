@@ -62,12 +62,12 @@ app.post('/scan', async function (req, res) {
         console.log('ok got the record!', missionRecord)
 
         
-        const senderScanTime = missionRecord['Sender Scan Time']
-        const receiverScanTime = missionRecord['Receiver Scan Time']
-        const receiverName = missionRecord['Receiver Name']
-        const senderName = missionRecord['Sender Name']
-        const scenarioName = missionRecord['Scenario Name']
-        const trackingUrl = missionRecord['Tracking URL']
+        const senderScanTime = missionRecord.fields['Sender Scan Time']
+        const receiverScanTime = missionRecord.fields['Receiver Scan Time']
+        const receiverName = missionRecord.fields['Receiver Name']
+        const senderName = missionRecord.fields['Sender Name']
+        const scenarioName = missionRecord.fields['Scenario Name']
+        const trackingUrl = missionRecord.fields['Tracking URL']
 
         console.log(`this is a ${scenarioName} from ${senderName} to ${receiverName}`)
 
