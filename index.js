@@ -39,6 +39,7 @@ app.get('/scan', async function (req, res) {
         } = req.body
 
         console.log(`its a ${scanType} scan for mission ${missionRecordId}. getin the airtable record`)
+        console.log(req)
 
         const missionRecord = await fetchMailMission(missionRecordId)
 
