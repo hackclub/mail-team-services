@@ -51,6 +51,8 @@ app.post('/scan', async function (req, res) {
 
         const missionRecord = await fetchMailMission(missionRecordId)
 
+        console.log(missionRecord)
+
         if (!missionRecord) throw new Error('Could not find Mail Mission with Record ID: '+missionRecordId)
         
         console.log('ok got the record!', missionRecord)
