@@ -19,7 +19,7 @@ const mailMissionsTable = new AirtablePlus({
     tableName: 'Mail Missions'
 })
 
-const operations = new Atwrap({
+const operations = Atwrap({
     apiKey: process.env.AIRTABLE_API_KEY,
     databaseRef: 'apptEEFG5HTfGQE7h'
 })
