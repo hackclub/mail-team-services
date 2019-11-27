@@ -8,7 +8,7 @@ const fetch = require('node-fetch')
 const AWS = require('aws-sdk')
 const uuid = require('uuid')
 const AirtablePlus = require('airtable-plus')
-const Atwrap = require('atwrap')
+const Atwrap = require('atwrap').default
 
 AWS.config.update({region: 'us-west-2'})
 s3 = new AWS.S3({apiVersion: '2006-03-01'});
@@ -21,10 +21,10 @@ const mailMissionsTable = new AirtablePlus({
 
 console.log('WTF are you, Atwrap??')
 console.log(Atwrap)
-// const operations = Atwrap({
-//     apiKey: process.env.AIRTABLE_API_KEY,
-//     databaseRef: 'apptEEFG5HTfGQE7h'
-// })
+const operations = new Atwrap({
+    apiKey: process.env.AIRTABLE_API_KEY,
+    databaseRef: 'apptEEFG5HTfGQE7h'
+})
 
 const app = express()
 app.use(express.json())
