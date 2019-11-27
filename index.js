@@ -59,7 +59,7 @@ app.post('/scan', async function (req, res) {
 
         if (!missionRecord) throw new Error('Could not find Mail Mission with Record ID: '+missionRecordId)
         
-        console.log('ok got the record!', missionRecord)
+        console.log('ok got the record!', missionRecord.fields)
 
         
         const senderScanTime = missionRecord.fields['Sender Scan Time']
