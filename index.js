@@ -18,7 +18,7 @@ const mailMissionsTable = new AirtablePlus({
     tableName: 'Mail Missions'
 })
 
-const fetchMailMission = async id => await airtable.read({
+const fetchMailMission = async id => await mailMissionsTable.read({
     filterByFormula: `{Record ID} = '${id}'`,
     maxRecords: 1
 })[0];
