@@ -33,10 +33,8 @@ app.get('/scan', async function (req, res) {
     console.log('sum1 scanned a package!!')
 
     try {
-        const {
-            missionRecordId,
-            scanType = 'internal'
-        } = req.body
+        const missionRecordId = req.params.mission
+        const scanType = req.params.type
 
         console.log(`its a ${scanType} scan for mission ${missionRecordId}. getin the airtable record`)
         console.log(req)
