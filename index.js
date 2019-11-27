@@ -8,6 +8,7 @@ const fetch = require('node-fetch')
 const AWS = require('aws-sdk')
 const uuid = require('uuid')
 const AirtablePlus = require('airtable-plus')
+const Atwrap = require('atwrap')
 
 AWS.config.update({region: 'us-west-2'})
 s3 = new AWS.S3({apiVersion: '2006-03-01'});
@@ -16,6 +17,11 @@ const mailMissionsTable = new AirtablePlus({
     apiKey: process.env.AIRTABLE_API_KEY,
     baseID: 'apptEEFG5HTfGQE7h',
     tableName: 'Mail Missions'
+})
+
+const operations = new Atwrap({
+    apiKey: process.env.AIRTABLE_API_KEY,
+    databaseRef: 'apptEEFG5HTfGQE7h'
 })
 
 const app = express()
@@ -35,7 +41,10 @@ app.get('/scan', async function (req, res) {
 
         console.log(`its a ${scanType} scan for mission ${missionRecordId}. getin the airtable record`)
 
-        const missionRecord = await mailMissionsTable.find(missionRecordId)
+        const missionRecord = await operations.get.single({
+            tableName: 'Mail Missions',
+            id: missionRecordId
+        })
 
         if (!missionRecord) throw new Error('Could not find Mail Mission with Record ID: '+missionRecordId)
         
