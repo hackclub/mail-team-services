@@ -47,6 +47,7 @@ app.post('/scan', async function (req, res) {
         
         console.log('ok got the record!', missionRecord)
 
+        
         const senderScanTime = missionRecord['Sender Scan Time']
         const receiverScanTime = missionRecord['Receiver Scan Time']
         const receiverName = missionRecord['Receiver Name']
