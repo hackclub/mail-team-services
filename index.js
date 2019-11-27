@@ -19,10 +19,12 @@ const mailMissionsTable = new AirtablePlus({
     tableName: 'Mail Missions'
 })
 
-const operations = Atwrap({
-    apiKey: process.env.AIRTABLE_API_KEY,
-    databaseRef: 'apptEEFG5HTfGQE7h'
-})
+console.log('WTF are you, Atwrap??')
+console.log(Atwrap)
+// const operations = Atwrap({
+//     apiKey: process.env.AIRTABLE_API_KEY,
+//     databaseRef: 'apptEEFG5HTfGQE7h'
+// })
 
 const app = express()
 app.use(express.json())
