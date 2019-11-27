@@ -19,8 +19,6 @@ const mailMissionsTable = new AirtablePlus({
     tableName: 'Mail Missions'
 })
 
-console.log('WTF are you, Atwrap??')
-console.log(Atwrap)
 const operations = new Atwrap({
     apiKey: process.env.AIRTABLE_API_KEY,
     databaseRef: 'apptEEFG5HTfGQE7h'
