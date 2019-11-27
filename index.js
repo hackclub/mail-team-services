@@ -29,12 +29,14 @@ app.listen(process.env.PORT || 3000, () => {
     console.log("Server running on port 3000");
 });
 
-app.get('/scan', async function (req, res) {
+app.post('/scan', async function (req, res) {
     console.log('sum1 scanned a package!!')
 
     try {
-        const missionRecordId = req.params.mission
-        const scanType = req.params.type
+        const {
+            missionRecordId,
+            scanType
+        } = req.body
 
         console.log(`its a ${scanType} scan for mission ${missionRecordId}. getin the airtable record`)
         console.log(req)
