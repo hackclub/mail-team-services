@@ -76,14 +76,18 @@ app.post('/scan', async function (req, res) {
 
         if (scanType == 'external' && !scannedExternal) {
             console.log('Sending POST to zapier')
-            const zapResponse = await fetch('https://hooks.zapier.com/hooks/catch/507705/o477r92/', {
+            const zapResponse = await (await fetch('https://hooks.zapier.com/hooks/catch/507705/o477r92/', {
                 method: 'POST',
-                body: {
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
                     missionRecordId,
                     scanType
-                }
-            })
-            console.log('POST sent to Zapier: ', zapResponse.json())
+                })
+            })).json()
+            
+            console.log('POST sent to Zapier: ', zapResponse)
         }
 
         res.send({
