@@ -83,7 +83,7 @@ app.post('/scan', async function (req, res) {
                     scanType
                 }
             })
-            console.log('POST sent to Zapier')
+            console.log('POST sent to Zapier: ', zapResponse.json())
         }
 
         res.send({
