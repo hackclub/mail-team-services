@@ -72,7 +72,7 @@ app.post('/scan', async function (req, res) {
         let scannedExternal = senderScanTime || false
         let scannedInternal = receiverScanTime || false
 
-        console.log(`this is a ${scenarioName} from ${senderName} to ${receiverName} which ${scannedInternal ? 'has' : 'has not'} been scanned internally and ${scannedExternal ? 'has' : 'has not'} been scanned externally`)
+        console.log(`this is an ${scanType} scan of a ${scenarioName} from ${senderName} to ${receiverName} which ${scannedInternal ? 'has' : 'has not'} been scanned internally and ${scannedExternal ? 'has' : 'has not'} been scanned externally`)
 
         if (scanType == 'external' && !scannedExternal) {
             fetch('https://hooks.zapier.com/hooks/catch/507705/o477r92/', {
