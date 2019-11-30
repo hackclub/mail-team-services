@@ -68,15 +68,16 @@ app.post('/scan', async function (req, res) {
         const senderName = missionRecord.fields['Sender Name']
         const scenarioName = missionRecord.fields['Scenario Name']
         const trackingUrl = missionRecord.fields['Tracking URL']
+        const scannedExternal = missionRecord.fields['Sender Scanned']
+        const scannedInternal = missionRecord.fields['Receiver Scanned']
 
-        const scannedExternal = senderScanTime || false
-        const scannedInternal = receiverScanTime || false
         const scanned = (scanType == 'external' && scannedExternal) || (scanType == 'internal' && scannedInternal)
 
         console.log(`this is an ${scanType} scan of a ${scenarioName} from ${senderName} to ${receiverName} which ${scannedInternal ? 'has' : 'has not'} been scanned internally and ${scannedExternal ? 'has' : 'has not'} been scanned externally`)
 
         if (!scanned) {
             console.log('Sending POST to zapier')
+
             const zapResponse = await (await fetch('https://hooks.zapier.com/hooks/catch/507705/o477r92/', {
                 method: 'POST',
                 headers: {
