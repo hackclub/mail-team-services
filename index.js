@@ -8,6 +8,8 @@ const fetch = require('node-fetch')
 const AWS = require('aws-sdk')
 const uuid = require('uuid')
 const AirtablePlus = require('airtable-plus')
+const multer = require('multer')
+const upload = multer({dest: __dirname + '/uploads/images'})
 
 AWS.config.update({region: 'us-west-2'})
 s3 = new AWS.S3({apiVersion: '2006-03-01'});
@@ -30,6 +32,7 @@ const fetchMailMission = async id => {
 const app = express()
 
 app.use(express.json())
+app.use(express.static('public'))
 app.use(express.urlencoded({extended: false}))
 app.use(express.bodyParser({uploadDir:'./uploads'}))
 
@@ -112,7 +115,7 @@ app.post('/scan', async function (req, res) {
     }
 })
 
-app.post('/photo-receipt', function (req, res, next) {
+app.post('/photo-receipt', upload.single('photo'), function (req, res) {
     console.log('oh boy oh boy here comes a request to post a photo receipt!!')
 
     try {
@@ -122,9 +125,7 @@ app.post('/photo-receipt', function (req, res, next) {
             type
         } = req.body
 
-        req.on('data', function(raw) {
-            console.log('received data: ' + raw);
-        });
+        
 
         console.log(`ok this is a ${type} photo for mission ${missionRecordId}`)
         const shortPhotoData = photoData.substring(0, 100)+'...'
