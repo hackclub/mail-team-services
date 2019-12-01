@@ -139,7 +139,7 @@ app.post('/photo-receipt', upload.single('photo'), async function (req, res) {
             Body: req.file.buffer
         }
 
-        console.log('Uploading S3 Response')
+        console.log('uploading 2 amazon s3 :D')
 
         const s3Response = await s3.upload(uploadParams).promise()
         
@@ -151,6 +151,24 @@ app.post('/photo-receipt', upload.single('photo'), async function (req, res) {
 
         console.log('s3 says upload suxes!!')
         console.log(s3Response)
+
+        const photoLocation = s3Response.location
+        console.log(photoLocation)
+
+        console.log('sendin to mr. zapier now.')
+
+        const zapResponse = await fetch('https://hooks.zapier.com/hooks/catch/507705/o61o7iw/', {
+            method: 'POST',
+            body: {
+                missionRecordId,
+                photoUrl: photoLocation
+                type,
+            }
+        })
+
+        res.send({
+            message: 'Success'
+        })
     }
     catch (err) {
         console.log('ummmmm something bad hapend :(((')
