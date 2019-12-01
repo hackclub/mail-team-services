@@ -287,7 +287,7 @@ async function reformatToA4(args) {
         rotate: pdflib.degrees(90)
     })
 
-    const qrSize = ppi*1
+    const qrSize = ppi*3/4
 
     page.drawImage(receiptQrEmbedded, {
         x: 10,
