@@ -132,7 +132,7 @@ app.post('/photo-receipt', upload.single('photo'), async function (req, res) {
             Bucket: 'hackclub-shipping-photos',
             Key: missionRecordId+'.'+fileType,
             ACL: 'public-read',
-            Body: req.file
+            Body: req.file.buffer
         }
 
         console.log('Uploading S3 Response')
