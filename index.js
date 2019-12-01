@@ -272,18 +272,18 @@ async function reformatToA4(args) {
     const ppi = 80
 
     page.drawImage(internalLabelEmbedded, {
-        x: page.getWidth() / 2 + ppi*3,
-        y: page.getHeight() / 2 - ppi*4.125,
-        width: ppi*4,
-        height: ppi*6,
+        x: page.getWidth() / 2 + ppi*3 + 4,
+        y: page.getHeight() / 2 - ppi*4.125 + 6,
+        width: ppi*4-8,
+        height: ppi*6-12,
         rotate: pdflib.degrees(90)
     })
 
     page.drawImage(externalLabelEmbedded, {
-        x: page.getWidth() / 2 + ppi*3,
-        y: page.getHeight() / 2 + ppi*0.125,
-        width: ppi*4,
-        height: ppi*6,
+        x: page.getWidth() / 2 + ppi*3 + 4,
+        y: page.getHeight() / 2 + ppi*0.125 + 6,
+        width: ppi*4-8,
+        height: ppi*6-12,
         rotate: pdflib.degrees(90)
     })
 
