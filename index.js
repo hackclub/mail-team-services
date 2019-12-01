@@ -120,20 +120,34 @@ app.post('/photo-receipt', upload.single('photo'), function (req, res) {
     try {
         const {
             missionRecordId,
-            photoData,
+            fileType = 'png',
             type
         } = req.body
 
-        
-
         console.log(`ok this is a ${type} photo for mission ${missionRecordId}`)
-        const shortPhotoData = photoData.substring(0, 100)+'...'
-        console.log(shortPhotoData)
 
         var buffer = Buffer.from(photoData, 'base64')
         var form = new FormData()
 
         console.log('ok i made a buffer and a form')
+
+        const uploadParams = {
+            Bucket: 'hackclub-shipping-photos',
+            Key: missionRecordId+'.'+fileType,
+            ACL: 'public-read',
+            Body: req.file
+        }
+
+        const s3Response = await s3.upload(uploadParams).promise()
+        
+        if (s3Response.err) {
+            console.log('uh oh s3 says very bad hapin :(');
+            console.log(s3Response)
+            return
+        }
+
+        console.log('s3 says upload suxes!!')
+        console.log(s3Response)
 
         return
     }
