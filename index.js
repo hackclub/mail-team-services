@@ -114,7 +114,7 @@ app.post('/scan', async function (req, res) {
     }
 })
 
-app.post('/photo-receipt', upload.single('photo'), function (req, res) {
+app.post('/photo-receipt', upload.single('photo'), async function (req, res) {
     console.log('oh boy oh boy here comes a request to post a photo receipt!!')
 
     try {
