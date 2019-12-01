@@ -110,6 +110,34 @@ app.post('/scan', async function (req, res) {
     }
 })
 
+app.post('/photo-receipt', function (req, res) {
+    console.log('oh boy oh boy here comes a request to post a photo receipt!!')
+
+    try {
+        const {
+            missionRecordId,
+            photoData,
+            type
+        } = req.body
+
+        console.log(`ok this is a ${type} photo for mission ${missionRecordId}`)
+        const shortPhotoData = photoData.substring(0, 100)+'...'
+        console.log(shortPhotoData)
+
+        var buffer = Buffer.from(photoData, 'base64')
+        var form = new FormData()
+
+        console.log('ok i made a buffer and a form')
+
+        return
+    }
+    catch (err) {
+        console.log('ummmmm something bad hapend :(((')
+        console.log(err)
+        res.send(err)
+    }
+})
+
 app.post('/bounce', function (req, res) {
     console.log('oh boy oh boy here comes a request!!')
 
