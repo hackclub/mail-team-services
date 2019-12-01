@@ -126,11 +126,6 @@ app.post('/photo-receipt', upload.single('photo'), async function (req, res) {
 
         console.log(`ok this is a ${type} photo for mission ${missionRecordId}`)
 
-        var buffer = Buffer.from(photoData, 'base64')
-        var form = new FormData()
-
-        console.log('ok i made a buffer and a form')
-
         const uploadParams = {
             Bucket: 'hackclub-shipping-photos',
             Key: missionRecordId+'.'+fileType,
