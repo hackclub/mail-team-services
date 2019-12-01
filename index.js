@@ -30,7 +30,9 @@ const fetchMailMission = async id => {
 const app = express()
 
 app.use(express.json())
-app.use (express.urlencoded({extended: false}))
+app.use(express.urlencoded({extended: false}))
+app.use(express.bodyParser({uploadDir:'./uploads'}))
+
 app.use(function(req, res, next) {
    res.header("Access-Control-Allow-Origin", "*");
    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -110,7 +112,7 @@ app.post('/scan', async function (req, res) {
     }
 })
 
-app.post('/photo-receipt', function (req, res) {
+app.post('/photo-receipt', function (req, res, next) {
     console.log('oh boy oh boy here comes a request to post a photo receipt!!')
 
     try {
@@ -119,6 +121,10 @@ app.post('/photo-receipt', function (req, res) {
             photoData,
             type
         } = req.body
+
+        req.on('data', function(raw) {
+            console.log('received data: ' + raw);
+        });
 
         console.log(`ok this is a ${type} photo for mission ${missionRecordId}`)
         const shortPhotoData = photoData.substring(0, 100)+'...'
