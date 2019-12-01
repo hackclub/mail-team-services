@@ -159,11 +159,11 @@ app.post('/photo-receipt', upload.single('photo'), async function (req, res) {
 
         const zapResponse = await fetch('https://hooks.zapier.com/hooks/catch/507705/o61o7iw/', {
             method: 'POST',
-            body: {
+            body: JSON.stringify({
                 missionRecordId,
                 photoUrl: photoLocation,
                 type
-            }
+            })
         })
 
         console.log('sended to mr. zap!')
