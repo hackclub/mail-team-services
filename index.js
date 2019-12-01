@@ -243,8 +243,9 @@ async function reformatToA4(args) {
         scenarioName,
         receiverName,
         missionNote,
+        clubName,
         externalQrBytes,
-        receiptQrBytes
+        receiptQrBytes,
     } = args
 
     console.log('ok maam i will reformat these labels to fit the A4 sticky label sheets :)')
@@ -310,16 +311,23 @@ async function reformatToA4(args) {
         font: helveticaFont
     })
 
-    page.drawText(missionRecordId || '', {
+    page.drawText(clubName || '', {
         x: qrSize+20,
         y: height-46,
         size: 10,
         font: helveticaFont
     })
 
-    page.drawText(missionNote || '', {
+    page.drawText(missionRecordId || '', {
         x: qrSize+20,
         y: height-58,
+        size: 10,
+        font: helveticaFont
+    })
+
+    page.drawText(missionNote || '', {
+        x: qrSize+20,
+        y: height-60,
         size: 10,
         font: helveticaFont
     })
@@ -338,6 +346,7 @@ app.post('/shipping-label', async function (req, res) {
             scenarioName,
             receiverName,
             missionNote,
+            clubName,
             fileData,
             fileName,
             message,
@@ -484,6 +493,7 @@ app.post('/shipping-label', async function (req, res) {
                 scenarioName,
                 receiverName,
                 missionNote,
+                clubName,
                 externalQrBytes,
                 labels: newPdf,
                 receiptQrBytes
