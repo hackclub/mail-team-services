@@ -124,7 +124,9 @@ app.post('/photo-receipt', upload.single('photo'), async function (req, res) {
             type
         } = req.body
 
+
         console.log(`ok this is a ${type} photo for mission ${missionRecordId}`)
+        console.log(req)
 
         const uploadParams = {
             Bucket: 'hackclub-shipping-photos',
@@ -132,6 +134,8 @@ app.post('/photo-receipt', upload.single('photo'), async function (req, res) {
             ACL: 'public-read',
             Body: req.file
         }
+
+        console.log('Uploading S3 Response')
 
         const s3Response = await s3.upload(uploadParams).promise()
         
@@ -143,8 +147,6 @@ app.post('/photo-receipt', upload.single('photo'), async function (req, res) {
 
         console.log('s3 says upload suxes!!')
         console.log(s3Response)
-
-        return
     }
     catch (err) {
         console.log('ummmmm something bad hapend :(((')
