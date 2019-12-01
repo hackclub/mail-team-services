@@ -166,6 +166,8 @@ app.post('/photo-receipt', upload.single('photo'), async function (req, res) {
             }
         })
 
+        console.log('sended to mr. zap!')
+
         res.send({
             message: 'Success'
         })
