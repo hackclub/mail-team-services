@@ -243,7 +243,8 @@ async function reformatToA4(args) {
         scenarioName,
         receiverName,
         missionNote,
-        externalQrBytes
+        externalQrBytes,
+        receiptQrBytes
     } = args
 
     console.log('ok maam i will reformat these labels to fit the A4 sticky label sheets :)')
@@ -260,6 +261,8 @@ async function reformatToA4(args) {
 
     const externalLabelEmbedded = await pdf.embedPng(externalLabelImage)
     const internalLabelEmbedded = await pdf.embedPng(internalLabelImage)
+
+    const receiptQrEmbedded = await pdf.embedPng(receiptQrBytes)
 
     // const externalQrImage = await pdf.embedPng(externalQrBytes)
 
@@ -283,30 +286,39 @@ async function reformatToA4(args) {
         height: ppi*6,
         rotate: pdflib.degrees(90)
     })
+
+    const qrSize = ppi*1
+
+    page.drawImage(receiptQrEmbedded, {
+        x: 10,
+        y: page.getHeight() - qrSize - 10,
+        width: qrSize,
+        height: qrSize,
+    })
         
     page.drawText(receiverName, {
-        x: 10,
+        x: qrSize+20,
         y: height-22,
         size: 10,
         font: helveticaFont
     })
     
     page.drawText(scenarioName, {
-        x: 10,
+        x: qrSize+20,
         y: height-34,
         size: 10,
         font: helveticaFont
     })
 
     page.drawText(missionRecordId || '', {
-        x: 10,
+        x: qrSize+20,
         y: height-46,
         size: 10,
         font: helveticaFont
     })
 
     page.drawText(missionNote || '', {
-        x: 10,
+        x: qrSize+20,
         y: height-58,
         size: 10,
         font: helveticaFont
@@ -332,6 +344,7 @@ app.post('/shipping-label', async function (req, res) {
             thread,
             token,
             channel,
+            receiptQrUrl,
             internalQrUrl,
             externalQrUrl,
             missionRecordId,
@@ -398,6 +411,11 @@ app.post('/shipping-label', async function (req, res) {
 
         const externalQrBytes = await fetch(externalQrUrl).then((res) => res.arrayBuffer())
         const externalQrImage = await pdfDoc.embedPng(externalQrBytes)
+        
+        const internalQrBytes = await fetch(internalQrUrl).then((res) => res.arrayBuffer())
+        const internalQrImage = await pdfDoc.embedPng(internalQrBytes)
+        
+        const receiptQrBytes = await fetch(receiptQrUrl).then((res) => res.arrayBuffer())
 
         firstPage.drawImage(externalQrImage, {
             x: 6,
@@ -408,8 +426,6 @@ app.post('/shipping-label', async function (req, res) {
 
         console.log('i drawd the qr code too :]')
 
-        const internalQrBytes = await fetch(internalQrUrl).then((res) => res.arrayBuffer())
-        const internalQrImage = await pdfDoc.embedPng(internalQrBytes)
 
         const secondPage = pdfDoc.insertPage(1, [width, height])
 
@@ -469,7 +485,8 @@ app.post('/shipping-label', async function (req, res) {
                 receiverName,
                 missionNote,
                 externalQrBytes,
-                labels: newPdf
+                labels: newPdf,
+                receiptQrBytes
             })
         }
 
