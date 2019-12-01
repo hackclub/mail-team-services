@@ -152,7 +152,7 @@ app.post('/photo-receipt', upload.single('photo'), async function (req, res) {
         console.log('s3 says upload suxes!!')
         console.log(s3Response)
 
-        const photoLocation = s3Response.location
+        const photoLocation = s3Response.Location
         console.log(photoLocation)
 
         console.log('sendin to mr. zapier now.')
