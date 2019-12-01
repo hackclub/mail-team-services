@@ -327,7 +327,7 @@ async function reformatToA4(args) {
 
     page.drawText(missionNote || '', {
         x: qrSize+20,
-        y: height-60,
+        y: height-70,
         size: 10,
         font: helveticaFont
     })
