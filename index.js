@@ -9,7 +9,11 @@ const AWS = require('aws-sdk')
 const uuid = require('uuid')
 const AirtablePlus = require('airtable-plus')
 const multer = require('multer')
-const upload = multer({dest: __dirname + '/uploads/images'})
+
+const upload = multer({
+    storage: multer.memoryStorage(), 
+    dest: __dirname + '/uploads/images'
+})
 
 AWS.config.update({region: 'us-west-2'})
 s3 = new AWS.S3({apiVersion: '2006-03-01'});
