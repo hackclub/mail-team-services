@@ -134,7 +134,7 @@ app.post('/photo-receipt', upload.single('photo'), async function (req, res) {
 
         const uploadParams = {
             Bucket: 'hackclub-shipping-photos',
-            Key: missionRecordId+'.'+fileType,
+            Key: missionRecordId+'-'+type+'.'+fileType,
             ACL: 'public-read',
             Body: req.file.buffer
         }
@@ -150,7 +150,6 @@ app.post('/photo-receipt', upload.single('photo'), async function (req, res) {
         }
 
         console.log('s3 says upload suxes!!')
-        console.log(s3Response)
 
         const photoLocation = s3Response.Location
         console.log(photoLocation)
