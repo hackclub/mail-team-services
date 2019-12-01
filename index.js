@@ -161,8 +161,8 @@ app.post('/photo-receipt', upload.single('photo'), async function (req, res) {
             method: 'POST',
             body: {
                 missionRecordId,
-                photoUrl: photoLocation
-                type,
+                photoUrl: photoLocation,
+                type
             }
         })
 
