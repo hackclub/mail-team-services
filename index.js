@@ -66,7 +66,7 @@ const stackText = async (args) => {
         font,
         size,
         gap = 2
-    }
+    } = args
 
     _.each(text, (v, i) => {
         page.drawText(v, {
