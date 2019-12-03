@@ -121,8 +121,8 @@ app.post('/address-label', async function(req, res) {
         stackText({
             page,
             text: extractAddress(toAddress),
-            originX: 0,
-            originY: height - ppi*2.5,
+            originX: ppi,
+            originY: height - ppi*3,
             size: 15,
             font: helveticaFont,
         })
@@ -504,7 +504,7 @@ app.post('/shipping-label', async function (req, res) {
         stackText({
             page: firstPage,
             text: [receiverName, scenarioName, missionRecordId],
-            originX: 10+qrSize,
+            originX: 5+qrSize,
             originY: 50-heightOffset,
             size: 10,
             font: helveticaFont
@@ -519,7 +519,7 @@ app.post('/shipping-label', async function (req, res) {
         const receiptQrBytes = await fetch(receiptQrUrl).then((res) => res.arrayBuffer())
 
         firstPage.drawImage(externalQrImage, {
-            x: 6,
+            x: 0,
             y: 6-heightOffset,
             width: qrSize,
             height: qrSize,
