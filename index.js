@@ -112,8 +112,8 @@ app.post('/address-label', async function(req, res) {
         stackText({
             page,
             text: extractAddress(fromAddress),
-            originX: ppi/4,
-            originY: height - ppi/8,
+            originX: 0,
+            originY: height,
             size: 10,
             font: helveticaFont,
         })
@@ -128,8 +128,8 @@ app.post('/address-label', async function(req, res) {
         })
 
         const stampSize = ppi*2/3
-        const stampX = width-stampSize-ppi/4
-        const stampY = height-stampSize-ppi/4
+        const stampX = width-stampSize
+        const stampY = height-stampSize
 
         page.drawRectangle({
             x: stampX,
@@ -484,7 +484,7 @@ app.post('/shipping-label', async function (req, res) {
         const heightOffset = originalHeight/7
 
         firstPage.setSize(originalWidth + widthOffset, originalHeight + heightOffset)
-        firstPage.translateContent(0, heightOffset)
+        firstPage.translateContent(widthOffset/2, heightOffset)
 
         var { width, height } = firstPage.getSize()
         
