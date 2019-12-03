@@ -9,6 +9,14 @@ const AWS = require('aws-sdk')
 const uuid = require('uuid')
 const AirtablePlus = require('airtable-plus')
 const multer = require('multer')
+const _ = require('lodash')
+
+const {
+    PDFDocument,
+    StandardFonts,
+    grayscale,
+    degrees
+} = pdflib
 
 const upload = multer({
     storage: multer.memoryStorage(), 
@@ -49,7 +57,85 @@ app.listen(process.env.PORT || 3000, () => {
     console.log("Server running on port 3000");
 });
 
-app.post('/scan', async function (req, res) {
+const stackText = async args => {
+    const {
+        page,
+        text,
+        originX,
+        originY,
+        font,
+        size,
+        gap = 2
+    }
+
+    _.each(text, (v, i) => {
+        page.drawText(v, {
+            x: originX,
+            y: originY-i*(size+gap)-size,
+            font,
+        })
+    })
+}
+
+app.post('/address-label', async function(req, res) {
+    console.log('we r gettin requested for a address label!!')
+
+    try {
+        const {
+            toAddress,
+            fromAddress,
+        } = req.body
+
+        const ppi = 80
+
+        const pdf = await PDFDocument.create()
+        const page = pdf.addPage([ppi*4, ppi*6])
+        const helveticaFont = await pdf.embedFont(pdflib.StandardFonts.Helvetica)
+
+        const { width, height } = page.getSize()
+        const fontSize = 30
+
+        const extractAddress = address => _.compact(_.map([
+            'name',
+            'street1',
+            'street2',
+            'street3',
+            'city',
+            'state',
+            'postalCode',
+            'country'
+        ], v => address[v]))
+
+        stackText({
+            text: extractAddress(fromAddress),
+            originX: ppi/4,
+            originY: height - ppi/4,
+            size: 30,
+            font: helveticaFont,
+        })
+
+        stackText({
+            text: extractAddress(toAddress),
+            originX: ppi,
+            originY: height - ppi*2.5,
+            size: 40,
+            font: helveticaFont,
+        })
+    
+        const labelData = await pdf.saveAsBase64()
+
+        res.send({
+            labelData
+        })
+    }
+    catch (err) {
+        console.log('ummmmm something bad hapend :(((')
+        console.log(err)
+        res.error(err)
+    }
+})
+
+app.post('/scan', async function(req, res) {
     console.log('sum1 scanned a package!!')
 
     try {
@@ -255,8 +341,8 @@ async function reformatToA4(args) {
 
     console.log('i rendered the pages to images hoo-rah!!')
 
-    const pdf = await pdflib.PDFDocument.create()
-    const helveticaFont = await pdf.embedFont(pdflib.StandardFonts.Helvetica)
+    const pdf = await PDFDocument.create()
+    const helveticaFont = await pdf.embedFont(StandardFonts.Helvetica)
 
     const page = pdf.addPage()
 
@@ -277,7 +363,7 @@ async function reformatToA4(args) {
         y: page.getHeight() / 2 - ppi*4.125 + 10,
         width: ppi*4-16,
         height: ppi*6-24,
-        rotate: pdflib.degrees(90)
+        rotate: degrees(90)
     })
 
     page.drawImage(externalLabelEmbedded, {
@@ -285,7 +371,7 @@ async function reformatToA4(args) {
         y: page.getHeight() / 2 + ppi*0.125 + 4,
         width: ppi*4-16,
         height: ppi*6-24,
-        rotate: pdflib.degrees(90)
+        rotate: degrees(90)
     })
 
     const qrSize = ppi*3/4
@@ -364,8 +450,8 @@ app.post('/shipping-label', async function (req, res) {
 
         var buffer = Buffer.from(fileData, 'base64')
 
-        var pdfDoc = await pdflib.PDFDocument.load(buffer)
-        var helveticaFont = await pdfDoc.embedFont(pdflib.StandardFonts.Helvetica)
+        var pdfDoc = await PDFDocument.load(buffer)
+        var helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
 
         console.log('i loaded the documint from the base64 data suxesfuly')
 
@@ -394,7 +480,7 @@ app.post('/shipping-label', async function (req, res) {
             width: width,
             height: height,
             borderWidth: 1,
-            borderColor: pdflib.grayscale(0)
+            borderColor: grayscale(0)
         })
 
         firstPage.drawText(receiverName, {
@@ -444,7 +530,7 @@ app.post('/shipping-label', async function (req, res) {
             width: width,
             height: height,
             borderWidth: 1,
-            borderColor: pdflib.grayscale(0)
+            borderColor: grayscale(0)
         })
 
         secondPage.drawImage(internalQrImage, {
@@ -459,7 +545,7 @@ app.post('/shipping-label', async function (req, res) {
             y: height-12-qrSize,
             size: 20,
             font: helveticaFont,
-            rotate: pdflib.degrees(-90)
+            rotate: degrees(-90)
         })
 
         secondPage.drawText(receiverName, {
