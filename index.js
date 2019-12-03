@@ -102,7 +102,8 @@ app.post('/address-label', async function(req, res) {
                 address.street1,
                 address.street2,
                 address.street3,
-                `${address.city}, ${address.state} ${address.postalCode} (${address.country})`
+                `${address.city}, ${address.state}`,
+                `${address.postalCode} (${address.country})`
             ]
 
             return _.compact(lines)
