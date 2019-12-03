@@ -107,6 +107,7 @@ app.post('/address-label', async function(req, res) {
         ], v => address[v]))
 
         stackText({
+            page,
             text: extractAddress(fromAddress),
             originX: ppi/4,
             originY: height - ppi/4,
@@ -115,6 +116,7 @@ app.post('/address-label', async function(req, res) {
         })
 
         stackText({
+            page,
             text: extractAddress(toAddress),
             originX: ppi,
             originY: height - ppi*2.5,
