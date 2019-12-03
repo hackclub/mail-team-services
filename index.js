@@ -477,14 +477,14 @@ app.post('/shipping-label', async function (req, res) {
 
         const qrSize = 48
 
-        firstPage.drawRectangle({
-            x: 0,
-            y: 0,
-            width: width,
-            height: height,
-            borderWidth: 1,
-            borderColor: grayscale(0)
-        })
+        // firstPage.drawRectangle({
+        //     x: 0,
+        //     y: 0,
+        //     width: width,
+        //     height: height,
+        //     borderWidth: 1,
+        //     borderColor: grayscale(0)
+        // })
 
         stackText({
             page: firstPage,
@@ -515,14 +515,14 @@ app.post('/shipping-label', async function (req, res) {
 
         const secondPage = pdfDoc.insertPage(1, [width, height])
 
-        secondPage.drawRectangle({
-            x: 0,
-            y: 0,
-            width: width,
-            height: height,
-            borderWidth: 1,
-            borderColor: grayscale(0)
-        })
+        // secondPage.drawRectangle({
+        //     x: 0,
+        //     y: 0,
+        //     width: width,
+        //     height: height,
+        //     borderWidth: 1,
+        //     borderColor: grayscale(0)
+        // })
 
         secondPage.drawImage(internalQrImage, {
             x: 6,
