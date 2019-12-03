@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@pdf-lib/fontkit": "0.0.4",
     "airtable": "^0.7.2",
     "airtable-plus": "^1.0.4",
     "assert": "^2.0.0",
