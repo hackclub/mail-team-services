@@ -486,23 +486,11 @@ app.post('/shipping-label', async function (req, res) {
             borderColor: grayscale(0)
         })
 
-        firstPage.drawText(receiverName, {
-            x: 10+qrSize,
-            y: height-20,
-            size: 10,
-            font: helveticaFont
-        })
-        
-        firstPage.drawText(scenarioName, {
-            x: 10+qrSize,
-            y: height-32,
-            size: 10,
-            font: helveticaFont
-        })
-
-        firstPage.drawText(missionRecordId || '', {
-            x: 10+qrSize,
-            y: height-44,
+        stackText({
+            page: firstPage,
+            text: [receiverName, scenarioName, missionRecordId],
+            originX: 10+qrSize,
+            originY: 50,
             size: 10,
             font: helveticaFont
         })
@@ -517,7 +505,7 @@ app.post('/shipping-label', async function (req, res) {
 
         firstPage.drawImage(externalQrImage, {
             x: 6,
-            y: height-qrSize-6,
+            y: 6,
             width: qrSize,
             height: qrSize,
         })
