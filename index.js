@@ -10,6 +10,13 @@ const uuid = require('uuid')
 const AirtablePlus = require('airtable-plus')
 const multer = require('multer')
 const _ = require('lodash')
+const fontKit = require('@pdf-lib/fontkit')
+const fs = require('fs')
+
+const fonts = {
+    oswald: fs.readFileSync('./fonts/oswald.ttf'),
+    specialElite: fs.readFileSync('./fonts/special_elite.ttf')
+}
 
 const {
     PDFDocument,
@@ -90,8 +97,10 @@ app.post('/address-label', async function(req, res) {
         const ppi = 80
 
         const pdf = await PDFDocument.create()
+        pdf.registerFontkit(fontkit)
+
         const page = pdf.addPage([ppi*4, ppi*6])
-        const helveticaFont = await pdf.embedFont(pdflib.StandardFonts.Helvetica)
+        const font = await pdf.embedFont(fonts.specialElite)//pdflib.StandardFonts.Helvetica)
 
         const { width, height } = page.getSize()
         const fontSize = 30
@@ -115,7 +124,7 @@ app.post('/address-label', async function(req, res) {
             originX: 0,
             originY: height-ppi/8,
             size: 10,
-            font: helveticaFont,
+            font
         })
 
         stackText({
@@ -124,7 +133,7 @@ app.post('/address-label', async function(req, res) {
             originX: ppi,
             originY: height - ppi*3,
             size: 15,
-            font: helveticaFont,
+            font
         })
 
         const stampSize = ppi*2/3
