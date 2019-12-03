@@ -96,16 +96,17 @@ app.post('/address-label', async function(req, res) {
         const { width, height } = page.getSize()
         const fontSize = 30
 
-        const extractAddress = address => _.compact(_.map([
-            'name',
-            'street1',
-            'street2',
-            'street3',
-            'city',
-            'state',
-            'postalCode',
-            'country'
-        ], v => address[v]))
+        const extractAddress = address => {
+            const lines = [
+                address.name,
+                address.street1,
+                address.street2,
+                address.street3,
+                `${adddress.city}, ${address.state} ${address.postalCode} (${address.country})`
+            ]
+
+            return _.compact(lines)
+        }
 
         stackText({
             page,
