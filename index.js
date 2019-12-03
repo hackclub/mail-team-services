@@ -10,7 +10,7 @@ const uuid = require('uuid')
 const AirtablePlus = require('airtable-plus')
 const multer = require('multer')
 const _ = require('lodash')
-const fontKit = require('@pdf-lib/fontkit')
+const fontkit = require('@pdf-lib/fontkit')
 const fs = require('fs')
 
 const fonts = {
