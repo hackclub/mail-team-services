@@ -129,7 +129,7 @@ app.post('/address-label', async function(req, res) {
 
         const stampSize = ppi*2/3
         const stampX = width-stampSize
-        const stampY = height-stampSize
+        const stampY = height-stampSize-1
 
         page.drawRectangle({
             x: stampX,
