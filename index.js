@@ -490,7 +490,7 @@ app.post('/shipping-label', async function (req, res) {
             page: firstPage,
             text: [receiverName, scenarioName, missionRecordId],
             originX: 10+qrSize,
-            originY: 50,
+            originY: 50-heightOffset,
             size: 10,
             font: helveticaFont
         })
@@ -505,7 +505,7 @@ app.post('/shipping-label', async function (req, res) {
 
         firstPage.drawImage(externalQrImage, {
             x: 6,
-            y: 6,
+            y: 6-heightOffset,
             width: qrSize,
             height: qrSize,
         })
