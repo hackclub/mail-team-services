@@ -100,7 +100,8 @@ app.post('/address-label', async function(req, res) {
         pdf.registerFontkit(fontkit)
 
         const page = pdf.addPage([ppi*4, ppi*6])
-        const font = await pdf.embedFont(fonts.specialElite)//pdflib.StandardFonts.Helvetica)
+        // const font = await pdf.embedFont(fonts.specialElite)
+        const font = await pdf.embedFont(pdflib.StandardFonts.Helvetica)
 
         const { width, height } = page.getSize()
         const fontSize = 30
