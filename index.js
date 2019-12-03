@@ -73,6 +73,7 @@ const stackText = async (args) => {
             x: originX,
             y: originY-i*(size+gap)-size,
             font,
+            size,
         })
     })
 }
@@ -111,7 +112,7 @@ app.post('/address-label', async function(req, res) {
             text: extractAddress(fromAddress),
             originX: ppi/4,
             originY: height - ppi/4,
-            size: 30,
+            size: 10,
             font: helveticaFont,
         })
 
@@ -120,7 +121,7 @@ app.post('/address-label', async function(req, res) {
             text: extractAddress(toAddress),
             originX: ppi,
             originY: height - ppi*2.5,
-            size: 40,
+            size: 15,
             font: helveticaFont,
         })
     
