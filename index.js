@@ -113,7 +113,7 @@ app.post('/address-label', async function(req, res) {
             page,
             text: extractAddress(fromAddress),
             originX: ppi/4,
-            originY: height - ppi/4,
+            originY: height - ppi/8,
             size: 10,
             font: helveticaFont,
         })
@@ -125,6 +125,19 @@ app.post('/address-label', async function(req, res) {
             originY: height - ppi*2.5,
             size: 15,
             font: helveticaFont,
+        })
+
+        const stampSize = ppi*2/3
+        const stampX = width-stampSize-ppi/4
+        const stampY = height-stampSize-ppi/4
+
+        page.drawRectangle({
+            x: stampX,
+            y: stampY,
+            width: stampSize,
+            height: stampSize,
+            borderWidth: 2,
+            borderColor: grayscale(0)
         })
     
         const labelData = await pdf.saveAsBase64()
