@@ -187,6 +187,7 @@ app.post('/scan', async function(req, res) {
         const senderScanTime = missionRecord.fields['Sender Scan Time']
         const receiverScanTime = missionRecord.fields['Receiver Scan Time']
         const receiverName = missionRecord.fields['Receiver Name']
+        const receiverPhotoUrl = missionRecord.fields['Receiver Photo']
         const senderName = missionRecord.fields['Sender Name']
         const scenarioName = missionRecord.fields['Scenario Name']
         const trackingUrl = missionRecord.fields['Tracking URL']
@@ -221,6 +222,7 @@ app.post('/scan', async function(req, res) {
             receiverScanTime,
             receiverName,
             senderName,
+            receiverPhotoUrl,
             trackingUrl,
             scenarioName
         })
