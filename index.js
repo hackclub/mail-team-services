@@ -136,7 +136,7 @@ app.post('/address-from-contact-info', async function(req, res) {
                 'Slack ID': slackId,
                 'Email': email,
                 'Full Name': name,
-                'Address': addressRecordId,
+                'Address': [addressRecordId],
                 'Address History': [addressRecordId]
             })
 
