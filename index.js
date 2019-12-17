@@ -123,11 +123,15 @@ app.post('/address-from-contact-info', async function(req, res) {
 
         if (personRecord) {
             addressRecordId = personRecord.fields['Address']
+
             console.log(`i found a person record!!! their address record id is ${addressRecordId}`)
         }
         else {
+            console.log(`i did not find person but will create one!`)
             const addressRecord = await addressesTable.create({})
             addressRecordId = addressRecord.id
+
+            console.log(`i made a address for the new person`)
             personRecord = await peopleTable.create({
                 'Slack ID': slackId,
                 'Email': email,
@@ -135,7 +139,8 @@ app.post('/address-from-contact-info', async function(req, res) {
                 'Address': addressRecordId,
                 'Address History': addressRecordId
             })
-            console.log(`i did not find person but i created one. new address record id is ${addressRecordId}`)
+            
+            console.log(`i maked person. new address record id is ${addressRecordId}`)
         }
 
         res.send({
