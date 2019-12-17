@@ -114,7 +114,7 @@ app.post('/address-from-contact-info', async function(req, res) {
         console.log(`ok this person has slack id "${slackId}" and email "${email}"`)
 
         let personRecord = (await peopleTable.read({
-            filterByFormula: `OR({Slack ID} = '${slackId}', Email = $${email}`,
+            filterByFormula: `OR({Slack ID} = '${slackId}', Email = '${email}')`,
             maxRecords: 1
         }))[0]
 
