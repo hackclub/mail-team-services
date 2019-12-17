@@ -39,6 +39,18 @@ const mailMissionsTable = new AirtablePlus({
     tableName: 'Mail Missions'
 })
 
+const peopleTable = new AirtablePlus({
+    apiKey: process.env.AIRTABLE_API_KEY,
+    baseID: 'apptEEFG5HTfGQE7h',
+    tableName: 'People'
+})
+
+const addressesTable = new AirtablePlus({
+    apiKey: process.env.AIRTABLE_API_KEY,
+    baseID: 'apptEEFG5HTfGQE7h',
+    tableName: 'Addresses'
+})
+
 const fetchMailMission = async id => {
     console.log('Fetching mission with id '+id)
     const mission = await mailMissionsTable.read({
@@ -84,6 +96,56 @@ const stackText = async (args) => {
         })
     })
 }
+
+// Find or init a person/address based on contact info
+app.post('/address-from-contact-info', async function(req, res) {
+    console.log('we gettin a request 2 find or init a person!!')
+
+    try {
+        const {
+            slackId,
+            email,
+            auth
+        } = req.body
+
+        if (auth != process.env.HACK_CLUB_AUTH)
+            throw new Error('Auth token is invalid')
+
+        console.log(`ok this person has slack id "${slackId}" and email "${email}"`)
+
+        let personRecord = (await peopleTable.read({
+            filterByFormula: `OR({Slack ID} = '${slackId}', Email = $${email}`,
+            maxRecords: 1
+        }))[0]
+
+        let addressRecordId
+
+        if (personRecord) {
+            addressRecordId = personRecord.fields['Address']
+            console.log(`i found a person record!!! their address record id is ${addressRecordId}`)
+        }
+        else {
+            const addressRecord = await addressesTable.create({})
+            addressRecordId = addressRecord.id
+            personRecord = await peopleTable.create({
+                'Slack ID': slackId,
+                'Email': email,
+                'Address': addressRecordId,
+                'Address History': addressRecordId
+            })
+            console.log(`i did not find person but i created one. new address record id is ${addressRecordId}`)
+        }
+
+        res.send({
+            addressRecordId
+        })
+    }
+    catch (err) {
+        console.log('ummmmm something bad hapend :(((')
+        console.log(err)
+        res.send(err)
+    }
+})
 
 app.post('/address-label', async function(req, res) {
     console.log('we r gettin requested for a address label!!')
