@@ -105,6 +105,7 @@ app.post('/address-from-contact-info', async function(req, res) {
         const {
             slackId,
             email,
+            name,
             auth
         } = req.body
 
@@ -130,6 +131,7 @@ app.post('/address-from-contact-info', async function(req, res) {
             personRecord = await peopleTable.create({
                 'Slack ID': slackId,
                 'Email': email,
+                'Full Name': name,
                 'Address': addressRecordId,
                 'Address History': addressRecordId
             })
