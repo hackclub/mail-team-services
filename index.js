@@ -123,7 +123,7 @@ app.post('/address-from-contact-info', async function(req, res) {
         let personRecordId
 
         if (personRecord) {
-            addressRecordId = personRecord.fields['Address']
+            addressRecordId = personRecord.fields['Address'][0]
             personRecordId = personRecord.id
 
             console.log(`i found a person record!!! their address record id is ${addressRecordId}`)
