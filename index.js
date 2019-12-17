@@ -137,9 +137,9 @@ app.post('/address-from-contact-info', async function(req, res) {
                 'Email': email,
                 'Full Name': name,
                 'Address': addressRecordId,
-                'Address History': addressRecordId
+                'Address History': [addressRecordId]
             })
-            
+
             console.log(`i maked person. new address record id is ${addressRecordId}`)
         }
 
