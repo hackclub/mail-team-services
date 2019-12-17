@@ -120,9 +120,11 @@ app.post('/address-from-contact-info', async function(req, res) {
         }))[0]
 
         let addressRecordId
+        let personRecordId
 
         if (personRecord) {
             addressRecordId = personRecord.fields['Address']
+            personRecordId = personRecord.id
 
             console.log(`i found a person record!!! their address record id is ${addressRecordId}`)
         }
@@ -139,12 +141,14 @@ app.post('/address-from-contact-info', async function(req, res) {
                 'Address': [addressRecordId],
                 'Address History': [addressRecordId]
             })
+            personRecordId = personRecord.id
 
             console.log(`i maked person. new address record id is ${addressRecordId}`)
         }
 
         res.send({
-            addressRecordId
+            addressRecordId,
+            personRecordId
         })
     }
     catch (err) {
