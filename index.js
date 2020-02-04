@@ -530,7 +530,7 @@ async function reformatToUSLetter(args) {
 app.post('/shipping-label', async function (req, res) {
     console.log('oh boy oh boy here comes a request to prepare a shipping label!!')
 
-    // try {
+    try {
         const {
             scenarioName,
             receiverName,
@@ -577,15 +577,6 @@ app.post('/shipping-label', async function (req, res) {
 
         const qrSize = 48
 
-        // firstPage.drawRectangle({
-        //     x: 0,
-        //     y: 0,
-        //     width: width,
-        //     height: height,
-        //     borderWidth: 1,
-        //     borderColor: grayscale(0)
-        // })
-
         stackText({
             page: firstPage,
             text: [receiverName, scenarioName, missionRecordId],
@@ -612,17 +603,7 @@ app.post('/shipping-label', async function (req, res) {
 
         console.log('i drawd the qr code too :]')
 
-
         const secondPage = pdfDoc.insertPage(1, [width, height])
-
-        // secondPage.drawRectangle({
-        //     x: 0,
-        //     y: 0,
-        //     width: width,
-        //     height: height,
-        //     borderWidth: 1,
-        //     borderColor: grayscale(0)
-        // })
 
         secondPage.drawImage(internalQrImage, {
             x: 6,
@@ -746,7 +727,6 @@ app.post('/shipping-label', async function (req, res) {
         })
         
         console.log('now i submitted the slcak pdf url to zaper!!! here is the zapier response:')
-        // console.log(zapResponse)
 
         res.send({
             statusCode: zapResponse.statusCode,
@@ -754,10 +734,10 @@ app.post('/shipping-label', async function (req, res) {
             message: zapResponse.message,
             file: zapResponse.file,
         })
-    // }
-    // catch (err) {
-    //     console.log('ummmmm something bad hapend :(((')
-    //     console.log(err)
-    //     res.send(err)
-    // }
+    }
+    catch (err) {
+        console.log('ummmmm something bad hapend :(((')
+        console.log(err)
+        res.send(err)
+    }
 })
