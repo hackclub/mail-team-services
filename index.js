@@ -425,7 +425,7 @@ app.post('/bounce', function (req, res) {
     }
 })
 
-async function reformatToA4(args) {
+async function reformatToUSLetter(args) {
     const {
         labels,
         missionRecordId,
@@ -664,8 +664,8 @@ app.post('/shipping-label', async function (req, res) {
 
         var newPdf = await pdfDoc.save()
 
-        if (format == 'A4') {
-            newPdf = await reformatToA4({
+        if (format == 'US Letter') {
+            newPdf = await reformatToUSLetter({
                 missionRecordId,
                 scenarioName,
                 receiverName,
