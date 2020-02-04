@@ -437,7 +437,7 @@ async function reformatToUSLetter(args) {
         receiptQrBytes,
     } = args
 
-    console.log('ok maam i will reformat these labels to fit the A4 sticky label sheets :)')
+    console.log('ok maam i will reformat these labels to fit the us letter sticky label sheets :)')
 
     const externalLabelImage = await render(labels, 1)
     const internalLabelImage = await render(labels, 2)
