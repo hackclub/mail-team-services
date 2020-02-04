@@ -173,7 +173,6 @@ app.post('/address-label', async function(req, res) {
         pdf.registerFontkit(fontkit)
 
         const page = pdf.addPage([ppi*4, ppi*6])
-        // const font = await pdf.embedFont(fonts.specialElite)
         const font = await pdf.embedFont(pdflib.StandardFonts.Helvetica)
 
         const { width, height } = page.getSize()
@@ -408,7 +407,6 @@ app.post('/bounce', function (req, res) {
             }
             else {
                 console.log('i submitted and it is good so happy!!!!!')
-                // console.log(response)
                 res.send({
                     statusCode: response.statusCode,
                     statusMessage: response.statusMessage,
@@ -453,8 +451,6 @@ async function reformatToUSLetter(args) {
     const internalLabelEmbedded = await pdf.embedPng(internalLabelImage)
 
     const receiptQrEmbedded = await pdf.embedPng(receiptQrBytes)
-
-    // const externalQrImage = await pdf.embedPng(externalQrBytes)
 
     const width = page.getWidth()
     const height = page.getHeight()
