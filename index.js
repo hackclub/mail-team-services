@@ -141,19 +141,13 @@ app.post('/address-from-contact-info', async function(req, res) {
             }))[0]
 
             if (sdpRecord) {
-                //console.log(sdpRecord.fields['Address (formatted)'])
-                //console.log(sdpRecord.id)
-
                 let addressRecord = await addressesTable.create({
                     'Street (First Line)': sdpRecord.fields['Address (first line)'],
                     'City': sdpRecord.fields['Address (city)'],
                     'State/Province': sdpRecord.fields['Address (state)'],
                     'Postal Code': sdpRecord.fields['Address (zip code)']
                 })
-                //console.log(addressRecord.id)
                 addressRecordId = addressRecord.id
-
-                console.log(`i did not find this person in the people table but i found them in the sdp table!!!`)
 
                 personRecord = await peopleTable.create({
                     'Slack ID': slackId,
@@ -163,6 +157,8 @@ app.post('/address-from-contact-info', async function(req, res) {
                     'Address History': [addressRecordId]
                 })
                 personRecordId = personRecord.id
+
+                console.log(`i did not find this person in the people table but i found them in the sdp table and created a person!!!`)
             }
             else {
                 console.log(`i did not find person but will create one!`)
