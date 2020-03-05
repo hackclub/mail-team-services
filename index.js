@@ -141,6 +141,8 @@ app.post('/address-from-contact-info', async function(req, res) {
             }))[0]
 
             if (sdpRecord) {
+                console.log(sdpRecord.fields['Address (formatted)'][0])
+                console.log(sdpRecord.fields['{Address (formatted)}'][0])
                 addressRecordId = sdpRecord.fields['Address (formatted)'][0]
                 personrecordId = sdpRecord.id
 
