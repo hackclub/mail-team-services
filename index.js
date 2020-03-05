@@ -141,10 +141,10 @@ app.post('/address-from-contact-info', async function(req, res) {
             }))[0]
 
             if (sdpRecord) {
-                console.log(sdpRecord.fields)
+                console.log(sdpRecord.fields['Address (formatted)'])
                 console.log(sdpRecord.id)
                 addressRecordId = sdpRecord.fields['Address'][0]
-                personrecordId = sdpRecord.id
+                //personrecordId = sdpRecord.id
 
                 console.log(`i did not find this person in the people table but i found them in the sdp table!!!`)
             }
