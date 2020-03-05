@@ -53,7 +53,7 @@ const addressesTable = new AirtablePlus({
 
 const sdpTable = new AirtablePlus({
     apiKey: process.env.AIRTABLE_API_KEY,
-    baseID: 'apptEEFG5HTfGQE7h',
+    baseID: 'apple9fiV81JsRytC',
     tableName: 'SDP Priority Activations'
 })
 
