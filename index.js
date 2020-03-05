@@ -141,12 +141,29 @@ app.post('/address-from-contact-info', async function(req, res) {
             }))[0]
 
             if (sdpRecord) {
-                console.log(sdpRecord.fields['Address (formatted)'])
-                console.log(sdpRecord.id)
-                addressRecordId = sdpRecord.fields['Address'][0]
-                //personrecordId = sdpRecord.id
+                //console.log(sdpRecord.fields['Address (formatted)'])
+                //console.log(sdpRecord.id)
+
+                let addressRecord = await addressesTable.create({
+                    'Name': sdpRecord.fields['GitHub Username'],
+                    'Street (First Line)': sdpRecord.fields['Address (first line)'],
+                    'City': sdpRecord.fields['Address (city)'],
+                    'State/Province': sdpRecord.fields['Address (state)'],
+                    'Postal Code': sdpRecord.fields['Address (zip code)']
+                })
+                //console.log(addressRecord.id)
+                addressRecordId = addressRecord.id
 
                 console.log(`i did not find this person in the people table but i found them in the sdp table!!!`)
+
+                personRecord = await peopleTable.create({
+                    'Slack ID': slackId,
+                    'Email': email,
+                    'Full Name': '',
+                    'Address': [addressRecordId],
+                    'Address History': [addressRecordId]
+                })
+                personRecordId = personRecord.id
             }
             else {
                 console.log(`i did not find person but will create one!`)
