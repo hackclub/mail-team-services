@@ -136,7 +136,7 @@ app.post('/address-from-contact-info', async function(req, res) {
         }
         else {
             let sdpRecord = (await sdpTable.read({
-                filterByFormula: `{GitHub Email} = '${email}`,
+                filterByFormula: `{GitHub Email} = '${email}'`,
                 maxRecords: 1
             }))[0]
 
