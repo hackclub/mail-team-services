@@ -142,7 +142,7 @@ app.post('/address-from-contact-info', async function(req, res) {
 
             if (sdpRecord) {
                 console.log(sdpRecord.fields['Address (formatted)'][0])
-                console.log(sdpRecord.fields['{Address (formatted)}'][0])
+                console.log(sdpRecord.id)
                 addressRecordId = sdpRecord.fields['Address (formatted)'][0]
                 personrecordId = sdpRecord.id
 
