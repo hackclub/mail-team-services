@@ -143,13 +143,18 @@ app.post('/address-from-contact-info', async function(req, res) {
             if (sdpRecord) {
                 //console.log(sdpRecord.fields['Address (formatted)'])
                 //console.log(sdpRecord.id)
+                let name = sdpRecord.fields['GitHub Username']
+                let address = sdpRecord.fields['Address (first line)']
+                let city = sdpRecord.fields['Address (city)']
+                let state = sdpRecord.fields['Address (state)']
+                let zipCode = sdpRecord.fields['Address (zip code)']
 
                 let addressRecord = await addressesTable.create({
-                    'Name': sdpRecord.fields['GitHub Username'],
-                    'Street (First Line)': sdpRecord.fields['Address (first line)'],
-                    'City': sdpRecord.fields['Address (city)'],
-                    'State/Province': sdpRecord.fields['Address (state)'],
-                    'Postal Code': sdpRecord.fields['Address (zip code)']
+                    'Name': name,
+                    'Street (First Line)': address,
+                    'City': city,
+                    'State/Province': state,
+                    'Postal Code': zipCode
                 })
                 //console.log(addressRecord.id)
                 addressRecordId = addressRecord.id
