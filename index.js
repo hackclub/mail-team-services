@@ -189,6 +189,7 @@ app.post('/address-from-contact-info', async function (req, res) {
                     'Address': [addressRecordId],
                     'Address History': [addressRecordId]
                 })
+                personRecordId = personRecord.id
 
                 console.log('ok so i did not find this person in the people table but i found them in the som sticker request table and created a person!!!!')
             } else {
