@@ -26,12 +26,12 @@ const {
 } = pdflib
 
 const upload = multer({
-    storage: multer.memoryStorage(), 
+    storage: multer.memoryStorage(),
     dest: __dirname + '/uploads/images'
 })
 
-AWS.config.update({region: 'us-west-2'})
-s3 = new AWS.S3({apiVersion: '2006-03-01'});
+AWS.config.update({ region: 'us-west-2' })
+s3 = new AWS.S3({ apiVersion: '2006-03-01' });
 
 const mailMissionsTable = new AirtablePlus({
     apiKey: process.env.AIRTABLE_API_KEY,
@@ -57,8 +57,14 @@ const sdpTable = new AirtablePlus({
     tableName: 'SDP Priority Activations'
 })
 
+const somStickerTable = new AirtablePlus({
+    apiKey: process.env.AIRTABLE_API_KEY,
+    baseID: 'appnP4GV8lmAuOXpf',
+    tableName: 'Sticker Requests'
+})
+
 const fetchMailMission = async id => {
-    console.log('Fetching mission with id '+id)
+    console.log('Fetching mission with id ' + id)
     const mission = await mailMissionsTable.read({
         filterByFormula: `{Record ID} = '${id}'`,
         maxRecords: 1
@@ -68,14 +74,14 @@ const fetchMailMission = async id => {
 }
 const app = express()
 
-app.use(express.json({limit: '50mb', extended: false}))
+app.use(express.json({ limit: '50mb', extended: false }))
 app.use(express.static('public'))
-app.use(express.urlencoded({limit: '50mb', extended: false}))
+app.use(express.urlencoded({ limit: '50mb', extended: false }))
 
-app.use(function(req, res, next) {
-   res.header("Access-Control-Allow-Origin", "*");
-   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-   next();
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
 })
 
 app.listen(process.env.PORT || 3000, () => {
@@ -96,7 +102,7 @@ const stackText = async (args) => {
     _.each(text, (v, i) => {
         page.drawText(v, {
             x: originX,
-            y: originY-i*(size+gap)-size,
+            y: originY - i * (size + gap) - size,
             font,
             size,
         })
@@ -104,7 +110,7 @@ const stackText = async (args) => {
 }
 
 // Find or init a person/address based on contact info
-app.post('/address-from-contact-info', async function(req, res) {
+app.post('/address-from-contact-info', async function (req, res) {
     console.log('we gettin a request 2 find or init a person!!')
 
     try {
@@ -160,11 +166,35 @@ app.post('/address-from-contact-info', async function(req, res) {
 
                 console.log(`i did not find this person in the people table but i found them in the sdp table and created a person!!!`)
             }
-            else {
+            else if (email.includes('max+som-stickers')) {
+                const somRecId = email.split('-')[2].split('@')[0]
+                console.log('som rec id', somRecId)
+                const stickerRequestRecord = (await somStickerTable.read({
+                    filterByFormula: `RECORD_ID() = '${somRecId}'`,
+                    maxRecords: 1
+                }))[0]
+                const addressRecord = await addressesTable.create({
+                    'Street (First Line)': stickerRequestRecord.fields['Street (first line)'],
+                    'City': stickerRequestRecord.fields['City'],
+                    'State/Province': stickerRequestRecord.fields['State / Province'],
+                    'Postal Code': sdpRecord.fields['Postal Code']
+                })
+                addressRecordId = addressRecord.id
+
+                personRecord = await peopleTable.create({
+                    'Slack ID': slackId,
+                    'Email': email,
+                    'Full Name': stickerRequestRecord.fields['Name'],
+                    'Address': [addressRecordId],
+                    'Address History': [addressRecordId]
+                })
+
+                console.log('ok so i did not find this person in the people table but i found them in the som sticker request table and created a person!!!!')
+            } else {
                 console.log(`i did not find person but will create one!`)
                 const addressRecord = await addressesTable.create({})
                 addressRecordId = addressRecord.id
-    
+
                 console.log(`i made a address for the new person`)
                 personRecord = await peopleTable.create({
                     'Slack ID': slackId,
@@ -174,7 +204,7 @@ app.post('/address-from-contact-info', async function(req, res) {
                     'Address History': [addressRecordId]
                 })
                 personRecordId = personRecord.id
-    
+
                 console.log(`i maked person. new address record id is ${addressRecordId}`)
             }
         }
@@ -191,7 +221,7 @@ app.post('/address-from-contact-info', async function(req, res) {
     }
 })
 
-app.post('/address-label', async function(req, res) {
+app.post('/address-label', async function (req, res) {
     console.log('we r gettin requested for a address label!!')
 
     try {
@@ -205,7 +235,7 @@ app.post('/address-label', async function(req, res) {
         const pdf = await PDFDocument.create()
         pdf.registerFontkit(fontkit)
 
-        const page = pdf.addPage([ppi*4, ppi*6])
+        const page = pdf.addPage([ppi * 4, ppi * 6])
         const font = await pdf.embedFont(pdflib.StandardFonts.Helvetica)
 
         const { width, height } = page.getSize()
@@ -228,7 +258,7 @@ app.post('/address-label', async function(req, res) {
             page,
             text: extractAddress(fromAddress),
             originX: 0,
-            originY: height-ppi/8,
+            originY: height - ppi / 8,
             size: 10,
             font
         })
@@ -237,14 +267,14 @@ app.post('/address-label', async function(req, res) {
             page,
             text: extractAddress(toAddress),
             originX: ppi,
-            originY: height - ppi*3,
+            originY: height - ppi * 3,
             size: 15,
             font
         })
 
-        const stampSize = ppi*2/3
-        const stampX = width-stampSize
-        const stampY = height-stampSize-ppi/8
+        const stampSize = ppi * 2 / 3
+        const stampX = width - stampSize
+        const stampY = height - stampSize - ppi / 8
 
         page.drawRectangle({
             x: stampX,
@@ -254,7 +284,7 @@ app.post('/address-label', async function(req, res) {
             borderWidth: 2,
             borderColor: grayscale(0)
         })
-    
+
         const labelData = await pdf.saveAsBase64()
 
         res.send({
@@ -268,7 +298,7 @@ app.post('/address-label', async function(req, res) {
     }
 })
 
-app.post('/scan', async function(req, res) {
+app.post('/scan', async function (req, res) {
     console.log('sum1 scanned a package!!')
 
     try {
@@ -284,11 +314,11 @@ app.post('/scan', async function(req, res) {
 
         console.log(missionRecord)
 
-        if (!missionRecord) throw new Error('Could not find Mail Mission with Record ID: '+missionRecordId)
-        
+        if (!missionRecord) throw new Error('Could not find Mail Mission with Record ID: ' + missionRecordId)
+
         console.log('ok got the record!', missionRecord.fields)
 
-        
+
         const senderScanTime = missionRecord.fields['Sender Scan Time']
         const receiverScanTime = missionRecord.fields['Receiver Scan Time']
         const receiverName = missionRecord.fields['Receiver Name']
@@ -316,7 +346,7 @@ app.post('/scan', async function(req, res) {
                     scanType
                 })
             })).json()
-            
+
             console.log('POST sent to Zapier: ', zapResponse)
         }
 
@@ -355,7 +385,7 @@ app.post('/photo-receipt', upload.single('photo'), async function (req, res) {
 
         const uploadParams = {
             Bucket: 'hackclub-shipping-photos',
-            Key: missionRecordId+'-'+type+'.'+fileType,
+            Key: missionRecordId + '-' + type + '.' + fileType,
             ACL: 'public-read',
             Body: req.file.buffer
         }
@@ -363,7 +393,7 @@ app.post('/photo-receipt', upload.single('photo'), async function (req, res) {
         console.log('uploading 2 amazon s3 :D')
 
         const s3Response = await s3.upload(uploadParams).promise()
-        
+
         if (s3Response.err) {
             console.log('uh oh s3 says very bad hapin :(');
             console.log(s3Response)
@@ -427,12 +457,12 @@ app.post('/bounce', function (req, res) {
         form.append('filetype', fileType)
         form.append('initial_comment', message)
         form.append('file', buffer, {
-            filename: fileName+'.'+fileType
+            filename: fileName + '.' + fileType
         })
 
         console.log('yay everything is appended to the form! redy to send :))')
-        
-        form.submit('https://slack.com/api/files.upload', function(err, response) {
+
+        form.submit('https://slack.com/api/files.upload', function (err, response) {
             if (err) {
                 console.log('i submitted but i got error :(')
                 console.log(err)
@@ -491,22 +521,22 @@ async function reformatToUSLetter(args) {
     const ppi = 80
 
     page.drawImage(internalLabelEmbedded, {
-        x: page.getWidth() / 2 + ppi*3 - 12,
-        y: page.getHeight() / 2 - ppi*4.125 + 10,
-        width: ppi*4-16,
-        height: ppi*6-24,
+        x: page.getWidth() / 2 + ppi * 3 - 12,
+        y: page.getHeight() / 2 - ppi * 4.125 + 10,
+        width: ppi * 4 - 16,
+        height: ppi * 6 - 24,
         rotate: degrees(90)
     })
 
     page.drawImage(externalLabelEmbedded, {
-        x: page.getWidth() / 2 + ppi*3 - 12,
-        y: page.getHeight() / 2 + ppi*0.125 + 4,
-        width: ppi*4-16,
-        height: ppi*6-24,
+        x: page.getWidth() / 2 + ppi * 3 - 12,
+        y: page.getHeight() / 2 + ppi * 0.125 + 4,
+        width: ppi * 4 - 16,
+        height: ppi * 6 - 24,
         rotate: degrees(90)
     })
 
-    const qrSize = ppi*3/4
+    const qrSize = ppi * 3 / 4
 
     page.drawImage(receiptQrEmbedded, {
         x: 10,
@@ -514,38 +544,38 @@ async function reformatToUSLetter(args) {
         width: qrSize,
         height: qrSize,
     })
-        
+
     page.drawText(receiverName, {
-        x: qrSize+20,
-        y: height-22,
+        x: qrSize + 20,
+        y: height - 22,
         size: 10,
         font: helveticaFont
     })
-    
+
     page.drawText(scenarioName, {
-        x: qrSize+20,
-        y: height-34,
+        x: qrSize + 20,
+        y: height - 34,
         size: 10,
         font: helveticaFont
     })
 
     page.drawText(clubName || '', {
-        x: qrSize+20,
-        y: height-46,
+        x: qrSize + 20,
+        y: height - 46,
         size: 10,
         font: helveticaFont
     })
 
     page.drawText(missionRecordId || '', {
-        x: qrSize+20,
-        y: height-58,
+        x: qrSize + 20,
+        y: height - 58,
         size: 10,
         font: helveticaFont
     })
 
     page.drawText(missionNote || '', {
-        x: qrSize+20,
-        y: height-70,
+        x: qrSize + 20,
+        y: height - 70,
         size: 10,
         font: helveticaFont
     })
@@ -594,14 +624,14 @@ app.post('/shipping-label', async function (req, res) {
 
         const originalHeight = firstPage.getHeight()
         const originalWidth = firstPage.getWidth()
-        const widthOffset = originalWidth/7
-        const heightOffset = originalHeight/7
+        const widthOffset = originalWidth / 7
+        const heightOffset = originalHeight / 7
 
         firstPage.setSize(originalWidth + widthOffset, originalHeight + heightOffset)
-        firstPage.translateContent(widthOffset/2, heightOffset)
+        firstPage.translateContent(widthOffset / 2, heightOffset)
 
         var { width, height } = firstPage.getSize()
-        
+
         console.log('then i drawd the text to the first page')
 
         const qrSize = 48
@@ -609,23 +639,23 @@ app.post('/shipping-label', async function (req, res) {
         stackText({
             page: firstPage,
             text: [receiverName, scenarioName, missionRecordId],
-            originX: 5+qrSize,
-            originY: 50-heightOffset,
+            originX: 5 + qrSize,
+            originY: 50 - heightOffset,
             size: 10,
             font: helveticaFont
         })
 
         const externalQrBytes = await fetch(externalQrUrl).then((res) => res.arrayBuffer())
         const externalQrImage = await pdfDoc.embedPng(externalQrBytes)
-        
+
         const internalQrBytes = await fetch(internalQrUrl).then((res) => res.arrayBuffer())
         const internalQrImage = await pdfDoc.embedPng(internalQrBytes)
-        
+
         const receiptQrBytes = await fetch(receiptQrUrl).then((res) => res.arrayBuffer())
 
         firstPage.drawImage(externalQrImage, {
             x: 0,
-            y: 6-heightOffset,
+            y: 6 - heightOffset,
             width: qrSize,
             height: qrSize,
         })
@@ -643,7 +673,7 @@ app.post('/shipping-label', async function (req, res) {
 
         secondPage.drawText('<— scan this with your phone camera', {
             x: 16,
-            y: height-12-qrSize,
+            y: height - 12 - qrSize,
             size: 20,
             font: helveticaFont,
             rotate: degrees(-90)
@@ -651,21 +681,21 @@ app.post('/shipping-label', async function (req, res) {
 
         secondPage.drawText(receiverName, {
             x: 12 + qrSize,
-            y: height-22,
+            y: height - 22,
             size: 10,
             font: helveticaFont
         })
-        
+
         secondPage.drawText(scenarioName, {
             x: 12 + qrSize,
-            y: height-34,
+            y: height - 34,
             size: 10,
             font: helveticaFont
         })
 
         secondPage.drawText(missionRecordId || '', {
             x: 12 + qrSize,
-            y: height-46,
+            y: height - 46,
             size: 10,
             font: helveticaFont
         })
@@ -702,7 +732,7 @@ app.post('/shipping-label', async function (req, res) {
         form.append('filetype', 'pdf')
         form.append('initial_comment', message)
         form.append('file', buffer, {
-            filename: fileName+'.pdf'
+            filename: fileName + '.pdf'
         })
 
         console.log('yay everything is appended to the form! redy to send :))')
@@ -728,13 +758,13 @@ app.post('/shipping-label', async function (req, res) {
 
         const uploadParams = {
             Bucket: 'hackclub-shipping-labels',
-            Key: missionRecordId+'.pdf',
+            Key: missionRecordId + '.pdf',
             ACL: 'public-read',
             Body: buffer
         }
 
         const s3Response = await s3.upload(uploadParams).promise()
-        
+
         if (s3Response.err) {
             console.log('uh oh s3 says very bad hapin :(');
             console.log(s3Response)
@@ -754,7 +784,7 @@ app.post('/shipping-label', async function (req, res) {
                 missionRecordId
             })
         })
-        
+
         console.log('now i submitted the slcak pdf url to zaper!!! here is the zapier response:')
 
         res.send({
