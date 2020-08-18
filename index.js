@@ -174,7 +174,7 @@ app.post('/address-from-contact-info', async function (req, res) {
                     maxRecords: 1
                 }))[0]
                 const addressRecord = await addressesTable.create({
-                    'Street (First Line)': stickerRequestRecord.fields['Street (first line)'],
+                    'Street (First Line)': stickerRequestRecord.fields['Street (First Line)'],
                     'City': stickerRequestRecord.fields['City'],
                     'State/Province': stickerRequestRecord.fields['State / Province'],
                     'Country': stickerRequestRecord.fields['Country Dropdown'],
