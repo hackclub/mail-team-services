@@ -177,6 +177,7 @@ app.post('/address-from-contact-info', async function (req, res) {
                     'Street (First Line)': stickerRequestRecord.fields['Street (first line)'],
                     'City': stickerRequestRecord.fields['City'],
                     'State/Province': stickerRequestRecord.fields['State / Province'],
+                    'Country': stickerRequestRecord.fields['Country Dropdown'],
                     'Postal Code': sdpRecord.fields['Postal Code']
                 })
                 addressRecordId = addressRecord.id
