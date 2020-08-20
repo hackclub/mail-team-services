@@ -63,6 +63,12 @@ const somStickerTable = new AirtablePlus({
     tableName: 'Sticker Requests'
 })
 
+const gchStickerTable = new AirtablePlus({
+    apiKey: process.env.AIRTABLE_API_KEY,
+    baseID: 'appcbcxYoqXY5hhpo',
+    tableName: 'Sticker Requests'
+})
+
 const fetchMailMission = async id => {
     console.log('Fetching mission with id ' + id)
     const mission = await mailMissionsTable.read({
@@ -192,6 +198,31 @@ app.post('/address-from-contact-info', async function (req, res) {
                 personRecordId = personRecord.id
 
                 console.log('ok so i did not find this person in the people table but i found them in the som sticker request table and created a person!!!!')
+            } else if (email.includes('max+gch-stickers')) {
+                const gchRecId = email.split('-')[2].split('@')[0]
+                console.log('gch rec id', gchRecId)
+                const stickerRequestRecord = (await gchStickerTable.read({
+                    filterByFormula: `RECORD_ID() = '${gchRecId}'`,
+                    maxRecords: 1
+                }))[0]
+                const addressRecord = await addressesTable.create({
+                    'Street (First Line)': stickerRequestRecord.fields['Street (First Line)'],
+                    'Street (Second Line': stickerRequestRecord.fields['Street (Second Line'],
+                    'City': stickerRequestRecord.fields['City'],
+                    'State/Province': stickerRequestRecord.fields['State / Province'],
+                    'Country': stickerRequestRecord.fields['Country Dropdown'],
+                    'Postal Code': stickerRequestRecord.fields['Postal Code']
+                })
+                addressRecordId = addressRecord.id
+
+                personRecord = await peopleTable.create({
+                    'Slack ID': slackId,
+                    'Email': email,
+                    'Full Name': stickerRequestRecord.fields['Name'],
+                    'Address': [addressRecordId],
+                    'Address History': [addressRecordId]
+                })
+                personRecordId = personRecord.id
             } else {
                 console.log(`i did not find person but will create one!`)
                 const addressRecord = await addressesTable.create({})
