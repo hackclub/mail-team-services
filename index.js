@@ -164,7 +164,7 @@ app.post('/address-from-contact-info', async function (req, res) {
                 personRecord = await peopleTable.create({
                     'Slack ID': slackId,
                     'Email': email,
-                    'Full Name': sdpRecord.fields['GitHub Username'],
+                    'Full Name': sdpRecord.fields['Address (first + last name)'] || sdpRecord.fields['GitHub Username'],
                     'Address': [addressRecordId],
                     'Address History': [addressRecordId]
                 })
