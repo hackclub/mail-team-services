@@ -157,7 +157,8 @@ app.post('/address-from-contact-info', async function (req, res) {
                     'Street (First Line)': sdpRecord.fields['Address (first line)'],
                     'City': sdpRecord.fields['Address (city)'],
                     'State/Province': sdpRecord.fields['Address (state)'],
-                    'Postal Code': sdpRecord.fields['Address (zip code)']
+                    'Postal Code': sdpRecord.fields['Address (zip code)'],
+                    'Country': sdpRecord.fields['Address (country)']
                 })
                 addressRecordId = addressRecord.id
 
