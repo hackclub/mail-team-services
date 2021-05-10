@@ -21,7 +21,7 @@
     "express": "^4.17.1",
     "file-to-array-buffer": "^1.0.0",
     "form-data": "^2.5.1",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.21",
     "multer": "^1.4.2",
     "node-fetch": "^2.6.0",
     "pdf-lib": "^1.2.1",
