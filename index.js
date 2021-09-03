@@ -643,6 +643,7 @@ app.post('/shipping-label', async function (req, res) {
         } = req.body
 
         console.log(`hmmm, lots of stuff to unpack here for this ${scenarioName} shipment...`)
+        console.log({externalQrUrl})
 
         var buffer = Buffer.from(fileData, 'base64')
 
